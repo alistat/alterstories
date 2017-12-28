@@ -1,0 +1,25 @@
+{
+  "name": "alterstories",
+  "version": "1.0.0",
+  "description": "System for collaborative script development",
+  "author": "alistat",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "precommit": "npm run lint"
+  },
+  "dependencies": {
+    "moment": "^2.20.1",
+    "node-sass": "^4.7.2",
+    "nuxt": "^1.0.0-rc11",
+    "pug": "^2.0.0-rc.4",
+    "sass-loader": "^6.0.6",
+    "vue-multiselect": "^2.0.8",
+    "vue-no-ssr": "^0.2.2",
+    "vue-style-loader": "^3.0.3"
+  },
+  "devDependencies": {}
+}
