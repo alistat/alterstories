@@ -8,8 +8,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
-    "precommit": "npm run lint"
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "moment": "^2.20.1",

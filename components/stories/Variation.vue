@@ -1,5 +1,5 @@
 <template lang="pug">
-  span.innerVariationWrap
+  span.innerVariationWrap(:style="{backgroundColor: variation.color}")
     span.variationName {{variation.name}}
     span.removeVariation(@click="onRemove", v-if="!readOnly", title="Remove")  ✘
 </template>
@@ -39,13 +39,12 @@
 
 <style scoped lang="scss">
   .innerVariationWrap {
-    margin-right: 0.4em;
-    background: #0f0f41;
-    /*border-radius: 0.25em;*/
-    padding: 0.1em 0.35em;
+    padding: 0 0.35em 0.1rem;
     vertical-align: middle;
-    color: white;
-    font-size: 0.9rem;
+    color: #fff;
+    font-size: 0.88rem;
+    display: inline-block;
+    border-radius: 2px;
   }
   .variationName {
     vertical-align: middle;

@@ -1,5 +1,5 @@
 <template lang="pug">
-    span.innerLabelWrap(:style="{background: label.color}")
+    span.innerLabelWrap(:style="{color: label.color}")
       span.labelName {{label.name}}
       span.removeLabel(@click="onRemove", v-if="!readOnly", title="Remove")  ✘
 </template>
@@ -39,11 +39,10 @@
 <style scoped lang="scss">
   .innerLabelWrap {
     margin-right: 0.4em;
-    background: midnightblue;
+    color: midnightblue;
     border-radius: 0.25em;
     padding: 0.1em 0.35em;
     vertical-align: middle;
-    color: white;
     font-size: 0.9rem;
   }
   .labelName {
@@ -52,5 +51,10 @@
   .removeLabel {
     cursor: default;
     vertical-align: middle;
+    transition: color 0.2s;
+  }
+  .removeLabel:hover {
+    color: darkred;
+    transition: color 0.2s;
   }
 </style>

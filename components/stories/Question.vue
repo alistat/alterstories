@@ -47,6 +47,6 @@
     margin: 0.7rem 0.5rem;
   }
   .answer {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 </style>
