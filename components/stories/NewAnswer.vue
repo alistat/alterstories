@@ -14,7 +14,7 @@
 
   export default {
     name: 'NewAnswer',
-    props: ["question"],
+    props: ["question", "pid"],
     data() {
       return {
         text: "",
@@ -22,12 +22,11 @@
       }
     },
     computed: {
-      // ...mapGetters({quests: 'getSaved', drafts: 'getDrafts'})
     },
     methods: {
       ...mapMutations('stories', ['addAnswer']),
       onSave() {
-        this.addAnswer({qid: this.question.id, answer: {text: this.text, link: this.link}});
+        this.addAnswer({pid: this.pid, qid: this.question.id, answer: {text: this.text, link: this.link}});
         this.text = "";
         this.link = "";
       }

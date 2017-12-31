@@ -14,6 +14,7 @@
 
   export default {
     name: "NewLabel",
+    props: ['pid'],
     data() {
       return {
         name: "",
@@ -23,7 +24,7 @@
     methods: {
       ...mapMutations('stories', ['addLabel']),
       onSave() {
-        this.addLabel({name: this.name, color: this.color});
+        this.addLabel({pid: this.pid, label: {name: this.name, color: this.color}});
         this.name = "";
       }
     }

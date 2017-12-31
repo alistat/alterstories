@@ -6,10 +6,14 @@
 
 <script>
   import { mapGetters, mapState } from 'vuex'
+  import { mapGettersParam } from '../Util';
 
   export default {
     name: "SLabel",
     props: {
+      pid: {
+        type: [String, Number]
+      },
       lid: {
         type: [String, Number]
       },
@@ -23,9 +27,9 @@
       }
     },
     computed: {
-      ...mapState('stories', {labels: state => state.project.labels}),
+      ...mapGettersParam('stories', { labelsMap: 'pid' }),
       label() {
-        return this.labels[this.lid];
+        return this.labelsMap[this.lid];
       }
     },
     methods: {

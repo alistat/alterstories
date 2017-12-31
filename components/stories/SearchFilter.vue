@@ -3,28 +3,42 @@
     h4 Filter
     .labelWrap
       multiselect(:value="getSelectedLabels", :options="getLabels", :multiple="true",
-        label="name", track-by="id", placeholder="Filter by label", @input="setSelectedLabels")
+        label="name", track-by="id", placeholder="Filter by label", @input="onSetLabels")
     .variationWrap
       multiselect(:value="getSelectedVariations", :options="getVariations", :multiple="true",
-        label="name", track-by="id", placeholder="Filter by variation", @input="setSelectedVariations")
+        label="name", track-by="id", placeholder="Filter by variation", @input="onSetVariations")
 </template>
 
 <script>
   import { mapGetters, mapMutations, mapState } from 'vuex';
+  import { mapGettersParam } from './Util';
   import Multiselect from 'vue-multiselect';
 
   export default {
     name: 'SearchFilter',
+    props: ['pid'],
     data() {
       return {
       }
     },
     computed: {
-      ...mapState('stories', ['filter']),
-      ...mapGetters('stories', ['getLabels', 'getSelectedLabels', 'getVariations', 'getSelectedVariations'])
+      ...mapGettersParam('stories',
+        {getLabels: 'pid', getSelectedLabels: 'pid', getVariations: 'pid', getSelectedVariations: 'pid'})
     },
     methods: {
-      ...mapMutations('stories', ['setSelectedLabels', 'setSelectedVariations'])
+      ...mapMutations('stories', ['setSelectedLabels', 'setSelectedVariations']),
+      onSetLabels(labels) {
+        this.setSelectedLabels({
+          pid: this.pid,
+          selectedLabels: labels
+        })
+      },
+      onSetVariations(variations) {
+        this.setSelectedVariations({
+          pid: this.pid,
+          selectedVariations: variations
+        })
+      },
     },
     components: {
       Multiselect

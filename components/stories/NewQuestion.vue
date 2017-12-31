@@ -12,18 +12,18 @@
 
   export default {
     name: 'NewQuestion',
+    props: ['pid'],
     data() {
       return {
         text: ""
       }
     },
     computed: {
-      // ...mapGetters({quests: 'getSaved', drafts: 'getDrafts'})
     },
     methods: {
       ...mapMutations('stories', ['addQuestion']),
       onSave() {
-        this.addQuestion({text: this.text})
+        this.addQuestion({pid: this.pid, question: {text: this.text}});
         this.text = ""
       }
     },

@@ -6,10 +6,14 @@
 
 <script>
   import { mapGetters, mapState } from 'vuex';
+  import { mapGettersParam } from './Util';
 
   export default {
     name: "Variation",
     props: {
+      pid: {
+        type: [String, Number]
+      },
       vid: {
         type: [String, Number]
       },
@@ -24,9 +28,9 @@
       }
     },
     computed: {
-      ...mapState('stories', {variations: state => state.project.variations}),
+      ...mapGettersParam('stories', { variationsMap: 'pid' }),
       variation() {
-        return this.variations[this.vid];
+        return this.variationsMap[this.vid];
       }
     },
     methods: {
@@ -39,6 +43,7 @@
 
 <style scoped lang="scss">
   .innerVariationWrap {
+    margin-right: 0.45em;
     padding: 0 0.35em 0.1rem;
     vertical-align: middle;
     color: #fff;

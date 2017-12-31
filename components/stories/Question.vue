@@ -4,8 +4,8 @@
       input.text(v-model="question.text")
     .answersWrap
       Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer.id',
-        :answer="answer", :question="question", :index="i")
-      NewAnswer(:question="question")
+        :answer="answer", :question="question", :pid="pid", :index="i")
+      NewAnswer(:question="question", :pid="pid")
 </template>
 
 <script>
@@ -15,16 +15,14 @@
 
   export default {
     name: 'Question',
-    props: ['question'],
+    props: ['question', 'pid'],
     data() {
       return {
       }
     },
     computed: {
-      // ...mapGetters({quests: 'getSaved', drafts: 'getDrafts'})
     },
     methods: {
-      // ...mapMutations(['removeSaved', 'removeDraft'])
     },
     components: {
       Answer,

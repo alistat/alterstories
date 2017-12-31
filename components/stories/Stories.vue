@@ -1,19 +1,11 @@
 <template lang="pug">
-  .storiesWrap(:class="{readOnly: readOnly}")
-    SearchFilter
-    .questionsWrap
-      h3 Questions
-      Question(v-for="q in getFilteredQuestions", :key='q.id', :question="q")
-    NewQuestion
-    LabelManage
+  .storiesWrap
+    Project(:pid="0")
+
 </template>
 
 <script>
-  import { mapState, mapMutations, mapGetters } from 'vuex'
-  import Question from './Question';
-  import NewQuestion from './NewQuestion';
-  import LabelManage from './labels/LabelManage';
-  import SearchFilter from './SearchFilter';
+  import Project from './Project';
 
   export default {
     name: "Stories",
@@ -23,19 +15,14 @@
       }
     },
     computed: {
-      ...mapState('stories', ['project', 'filter', 'readOnly']),
-      ...mapGetters('stories', ['getFilteredQuestions'])
     },
     methods: {
-      ...mapMutations('stories', ['addQuestion'])
     },
     components: {
-      Question,
-      NewQuestion,
-      SearchFilter,
-      LabelManage,
+      Project
     }
   }
+
 </script>
 
 <style scoped lang="scss">

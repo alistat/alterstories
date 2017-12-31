@@ -3,47 +3,52 @@
     .control
       .index {{index+1}}
       .options
-        <!--img.delete(@click="onDelete", src="https://png.icons8.com/color/50/000000/trash.png", title="Delete")-->
-        <!--img.delete(@click="onDelete", src="https://png.icons8.com/wired/50/000000/trash.png", title="Delete")-->
         img.toggleOptions(src="https://png.icons8.com/ios/50/000000/support.png",
-          @click="showOptions=true", v-if="!showOptions", title="Show Options")
-        img.toggleOptions(src="https://png.icons8.com/ios/50/000000/support-filled.png",
-          @click="showOptions=false", v-if="showOptions", title="Hide Options")
+          @click="$refs.options.open()", title="Show Options")
     .content
       span.textWrap
         input.text(v-model="answer.text")
         a.link(v-if="answer.link", :href="answer.link", title="Open link in new tab", target="_blank") {{linkDomain}}
-
-        multiselect.addNew(v-model="newVariation", :options="newVariations", label="name", track-by="id", :multiple="false",
-          :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='',
-          placeholder="Add to Variation", @input="onNewVariation", v-if="showOptions", :disabled="newVariations.length == 0")
-        multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="id", :multiple="false",
-          :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
-          placeholder="Add Label", @input="onNewLabel", v-if="showOptions", :disabled="newLabels.length == 0")
       .metaWrap
         span.variationWrap
-          Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid",
+          Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)")
-
-          <!--select(v-model="newVariation", @change="onNewVariation", v-if="newVariations.length > 0")-->
-            <!--option(:value="null")-->
-              <!--.newPlus +-->
-              <!--.newLabel  variation-->
-            <!--option(v-for="variation in newVariations", :key="variation.id", :value="variation") {{variation.name}}-->
         span.labelWrap
-          SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid",
+          SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
           span.noLabels(v-if="labelCount == 0") no labels
+    sweet-modal.optionsArea(ref="options")
+      h2(slot="title") Answer Options
+      .optionsInner
+        section
+          h4.optionsHead(style="margin-top: 0;") Link
+          input.linkEdit(v-model="answer.link", type="url")
+        section
+          h4.optionsHead Variations
+          Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
+            :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)")
+          multiselect.addNew(v-model="newVariation", :options="newVariations", label="name", track-by="id", :multiple="false",
+            :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='',
+            placeholder="Add to Variation", @input="onNewVariation", :disabled="newVariations.length == 0")
+        section
+          h4.optionsHead Labels
+          SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
+            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
+          multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="id", :multiple="false",
+            :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
+            placeholder="Add Label", @input="onNewLabel", :disabled="newLabels.length == 0")
 
 </template>
 
 <script>
   import { mapGetters, mapMutations, mapState } from 'vuex'
-  import {anyCommonArrayKey, mapToId} from './StoryStore';
+  import {anyCommonArrayKey, mapToId, getLabels, getVariations} from './StoryStore';
+  import { mapGettersParam } from './Util';
   import SLabel from './labels/SLabel';
   import Variation from './Variation';
   import moment from 'moment';
   import Multiselect from 'vue-multiselect';
+  import { SweetModal } from 'sweet-modal-vue'
 
   function getHostName(url) {
     let match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:#?]+)/i);
@@ -57,17 +62,17 @@
 
   export default {
     name: 'Answer',
-    props: ['answer', 'question', 'index'],
+    props: ['answer', 'question', 'index', 'pid'],
     data() {
       return {
         newLabel: null,
         newVariation: null,
-        showOptions: false
       }
     },
     computed: {
-      ...mapState('stories', {labels: state => state.project.labels, filter: 'filter'}),
-      ...mapGetters('stories', ['getLabels', 'getVariations']),
+      ...mapGettersParam('stories', {
+        labelsMap: 'pid', getLabels: 'pid', getVariations: 'pid', getFilter: 'pid'
+      }),
       newLabels() {
         return this.getLabels.filter(label => !this.answer.labels.hasOwnProperty(label.id));
       },
@@ -79,10 +84,10 @@
         return this.getVariations.filter(variation => !usedVariations.hasOwnProperty(variation.id));
       },
       passesFilter() {
-        const vari =  this.filter.variations.length === 0
-          || anyCommonArrayKey(mapToId(this.filter.variations), this.answer.variations);
-        const label = this.filter.labels.length === 0
-          || anyCommonArrayKey(mapToId(this.filter.labels), this.answer.labels);
+        const vari =  this.getFilter.variations.length === 0
+          || anyCommonArrayKey(mapToId(this.getFilter.variations), this.answer.variations);
+        const label = this.getFilter.labels.length === 0
+          || anyCommonArrayKey(mapToId(this.getFilter.labels), this.answer.labels);
         return vari && label;
       },
       linkDomain() {
@@ -94,7 +99,7 @@
       },
       labelCount() {
         return Object.keys(this.answer.labels).length;
-      }
+      },
     },
     methods: {
       ...mapMutations('stories', ['addLabelToAnswer', 'removeLabelFromAnswer',
@@ -105,6 +110,7 @@
       onNewLabel() {
         if (this.newLabel !== null) {
           this.addLabelToAnswer({
+            pid: this.pid,
             qid: this.question.id,
             aid: this.answer.id,
             lid: this.newLabel.id
@@ -114,6 +120,7 @@
       },
       onLabelRemove(lid) {
         this.removeLabelFromAnswer({
+          pid: this.pid,
           qid: this.question.id,
           aid: this.answer.id,
           lid
@@ -122,6 +129,7 @@
       onNewVariation() {
         if (this.newVariation !== null) {
           this.addAnswerIntoVariation({
+            pid: this.pid,
             qid: this.question.id,
             aid: this.answer.id,
             vid: this.newVariation.id
@@ -131,6 +139,7 @@
       },
       onVariationRemove(vid) {
         this.removeAnswerFromVariation({
+          pid: this.pid,
           qid: this.question.id,
           aid: this.answer.id,
           vid
@@ -143,7 +152,8 @@
     components: {
       SLabel,
       Variation,
-      Multiselect
+      Multiselect,
+      SweetModal,
     },
 
   }
@@ -230,5 +240,12 @@
     width: 1.5rem;
     vertical-align: middle;
     /*margin-right: 0.5rem;*/
+  }
+  .optionsInner {
+    text-align: start;
+  }
+  .optionsHead {
+    margin: 1.5rem 0 0.6rem;
+    font-size: 1.05rem;
   }
 </style>

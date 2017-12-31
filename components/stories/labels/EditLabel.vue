@@ -6,9 +6,7 @@
     span.colorWrap
       input.color(v-model="color", type="color", @input="changedColor=true")
     span.actionsWrap(v-show="changedName || changedColor")
-      <!--button.save(type="button", @click="onSave", title="Save") ✓-->
       img.save(src="https://png.icons8.com/color/50/000000/checked-2.png", @click="onSave", title="Save")
-      <!--button.cancel(type="button", @click="onCancel", title="Cancel") ✘-->
       img.cancel(src="https://png.icons8.com/color/50/000000/close-window.png", @click="onCancel", title="Cancel")
 </template>
 
@@ -17,7 +15,7 @@
 
   export default {
     name: "NewLabel",
-    props: ['label'],
+    props: ['pid', 'label'],
     data() {
       return {
         name: this.label.name,
@@ -29,7 +27,7 @@
     methods: {
       ...mapMutations('stories', ['editLabel', 'removeLabel']),
       onSave() {
-        this.editLabel({id: this.label.id, name: this.name, color: this.color});
+        this.editLabel({pid: this.pid, label: {id: this.label.id, name: this.name, color: this.color}});
         this.changedName = false;
         this.changedColor = false;
       },
@@ -40,7 +38,7 @@
         this.changedColor = false;
       },
       onDelete() {
-        this.removeLabel(this.label.id);
+        this.removeLabel({pid: this.pid, lid: this.label.id});
       }
     },
     watch: {
@@ -73,18 +71,6 @@
   .actionsWrap {
     vertical-align: middle;
   }
-  /*.save, .cancel {*/
-    /*padding: .3rem 0.1rem;*/
-  /*}*/
-  /*.save {*/
-    /*margin-right: 0.2rem;*/
-    /*color: white;*/
-    /*background: darkgreen;*/
-  /*}*/
-  /*.cancel {*/
-    /*color: white;*/
-    /*background: indianred;*/
-  /*}*/
   .save, .cancel {
     width: 2.2rem;
     vertical-align: middle;

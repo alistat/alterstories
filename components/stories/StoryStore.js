@@ -54,111 +54,146 @@ export function mapToId(arr) {
 export default {
   namespaced: true,
   state: {
-    project: {
-      questions: {
-        0: {
-          id: 0,
-          text: "Why",
-          labels: {},
-          answers: {}
-        }
-      },
-      labels: {
-
-      },
-      variations: {
-        0: {
-          id: 0,
-          name: "master",
-          color: "#0f0f41"
+    allProjects: [
+      {
+        id: 0,
+        name: "main"
+      }
+    ],
+    projects: {
+      0: {
+        id: 0,
+        name: "main",
+        questions: {
+          0: {
+            id: 0,
+            text: "Why",
+            labels: {},
+            answers: {}
+          }
         },
-        1: {
-          id: 1,
-          name: "second",
-          color: "#7c7a7a"
+        labels: {},
+        variations: {
+          0: {
+            id: 0,
+            name: "master",
+            color: "#0f0f41"
+          },
+          1: {
+            id: 1,
+            name: "second",
+            color: "#7c7a7a"
+          }
         }
       }
     },
-    filter: {
-      labels: [],
-      variations: [],
-      text: "",
-      showOnlyFilteredAnswers: false
+    filters: {
+      0: {
+        labels: [],
+        variations:
+          [],
+        text:
+          "",
+        showOnlyFilteredAnswers:
+          false
+      }
     },
     readOnly: false
   },
   getters: {
+    getProject(state) {
+      return pid => state.projects[pid]
+    },
+    getFilter(state) {
+      return pid => state.filters[pid]
+    },
     labelName(state) {
-      return lid => state.project.labels[lid].name;
+      return (pid, lid) => state.projects[pid].labels[lid].name;
     },
     variationName(state) {
-      return vid => state.project.variations[vid].name;
+      return (pid, vid) => state.projects[pid].variations[vid].name;
     },
     getLabels(state) {
-      return Object.values(state.project.labels);
+      return pid => Object.values(state.projects[pid].labels);
     },
     getVariations(state) {
-      return Object.values(state.project.variations);
+      return pid => Object.values(state.projects[pid].variations);
+    },
+    labelsMap(state) {
+      return pid => state.projects[pid].labels;
+    },
+    variationsMap(state) {
+      return pid => state.projects[pid].variations;
     },
     getSelectedLabels(state) {
-      return state.filter.labels;
+      return pid => state.filters[pid].labels;
     },
     getSelectedVariations(state) {
-      return state.filter.variations;
+      return pid => state.filters[pid].variations;
     },
     isFilterActive(state) {
-      return state.filter.labels.length > 0
-          || state.filter.variations.length > 0
-          || !!state.filter.text
-    },
-    getFilteredQuestions(state, getters) {
-      if (state.filter.labels.length === 0) {
-        return state.project.questions;
+      return pid => {
+        const filter = state.filters[pid];
+        return filter.labels.length > 0
+          || filter.variations.length > 0
+          || !!filter.text;
       }
-      const labels = mapToId(state.filter.labels);
-      const result = [];
-      for (const q of Object.values(state.project.questions)) {
-        if (anyCommonArrayKey(labels, q.labels)) {
-          result.push(q)
-        } else {
-          for (const a of Object.values(q.answers)) {
-            console.log(a.text);
-            console.log(a.labels);
-            if (anyCommonArrayKey(labels, a.labels)) {
-              result.push(q);
-              break;
+    },
+    getFilteredQuestions(state) {
+      return pid => {
+        const filter = state.filters[pid];
+        const project = state.projects[pid];
+        if (filter.labels.length === 0) {
+          return project.questions;
+        }
+        const labels = mapToId(filter.labels);
+        const result = [];
+        for (const q of Object.values(project.questions)) {
+          if (anyCommonArrayKey(labels, q.labels)) {
+            result.push(q)
+          } else {
+            for (const a of Object.values(q.answers)) {
+              console.log(a.text);
+              console.log(a.labels);
+              if (anyCommonArrayKey(labels, a.labels)) {
+                result.push(q);
+                break;
+              }
             }
           }
         }
-      }
 
-      return result;
+        return result;
+      };
+
     }
   },
   mutations: {
-    addQuestion(state, question) {
-      const project = state.project;
+    addQuestion(state, {pid, question}) {
+      const project = state.projects[pid];
       question = Object.assign({text: "", answers: {}, labels: {}}, question);
       question.id = newId(project.questions);
       Vue.set(project.questions, question.id, question);
     },
-    editQuestion(state, {id: qid, text}) {
-      const project = state.project;
-      const question = project.questions[qid];
+    editQuestion(state, {pid, question}) {
+      const project = state.projects[pid];
+      const {qid, text} = question;
+      question = project.questions[qid];
       if (text !== undefined && text !== question.text) {
         question.text = text;
       }
     },
-    removeQuestion(state, qid) {
-      Vue.delete(state.project.questions, qid);
+    removeQuestion(state, {pid, qid}) {
+      Vue.delete(state.projects[pid].questions, qid);
     },
-    addLabel(state, label) {
-      const project = state.project;
+    addLabel(state, {pid, label}) {
+      const project = state.projects[pid];
       label.id = newId(project.labels);
       Vue.set(project.labels, label.id, label)
     },
-    editLabel(state, {id: lid, name, color}) {
-      const project = state.project;
+    editLabel(state, {pid, label: lbl}) {
+      const project = state.projects[pid];
+      const {id: lid, name, color} = lbl;
       const label = project.labels[lid];
       if (name !== undefined && name !== label.name) {
         label.name = name;
@@ -167,44 +202,47 @@ export default {
         label.color = color;
       }
     },
-    removeLabel(state, lid) {
-      Vue.delete(state.project.labels, lid);
-      for (const q of Object.values(state.project.questions)) {
+    removeLabel(state, {pid, lid}) {
+      const project = state.projects[pid];
+      Vue.delete(project.labels, lid);
+      for (const q of Object.values(project.questions)) {
         Vue.delete(q.labels, lid);
         for (const a of Object.values(q.answers)) {
           Vue.delete(a.labels, lid);
         }
       }
     },
-    addVariation(state, label) {
-      const project = state.project;
-      label.id = newId(project.labels);
-      project.labels[label.id] = label; // TODO XXX
+    addVariation(state, {pid, variation}) {
+      const project = state.projects[pid];
+      variation.id = newId(project.variations);
+      project.variations[variation.id] = variation;
     },
-    editVariation(state, {id: vid, name}) {
-      const project = state.project;
+    editVariation(state, {pid, variation: vari}) {
+      const project = state.projects[pid];
+      const {id: vid, name} = vari;
       const variation = project.variations[vid];
       if (name !== undefined && name !== variation.name) {
         variation.name = name;
       }
     },
-    removeVariation(state, vid) {
-      Vue.delete(state.project.variations, vid);
-      for (const q of Object.values(state.project.questions)) {
+    removeVariation(state, {pid, vid}) {
+      const project = state.projects[pid];
+      Vue.delete(project.variations, vid);
+      for (const q of Object.values(project.questions)) {
         for (const a of Object.values(q.answers)) {
           Vue.delete(a.variations, vid);
         }
       }
       // TODO maybe break when variation found in question
     },
-    addAnswer(state, {qid, answer}) {
-      const question = state.project.questions[qid];
+    addAnswer(state, {pid, qid, answer}) {
+      const question = state.projects[pid].questions[qid];
       answer = Object.assign({text: '', labels: {}, variations: {}}, answer);
       answer.id = newId(question.answers);
       Vue.set(question.answers, answer.id, answer);
     },
-    editAnswer(state, {qid, answer: newAnswer}) {
-      const answer = state.project.questions[qid].answers[newAnswer.id];
+    editAnswer(state, {pid, qid, answer: newAnswer}) {
+      const answer = state.projects[pid].questions[qid].answers[newAnswer.id];
       if (newAnswer.text !== undefined && newAnswer.text !== answer.text) {
         answer.text = newAnswer.text;
       }
@@ -212,38 +250,38 @@ export default {
         answer.link = newAnswer.link;
       }
     },
-    removeAnswer(state, qid, aid) {
-      const question = state.project.questions[qid];
+    removeAnswer(state, {pid, qid, aid}) {
+      const question = state.projects[pid].questions[qid];
       Vue.delete(question.answers, aid);
     },
-    addLabelToQuestion(state, {qid, lid}) {
-      Vue.set(state.project.questions[qid].labels, lid, Date.now());
+    addLabelToQuestion(state, {pid, qid, lid}) {
+      Vue.set(state.projects[pid].questions[qid].labels, lid, Date.now());
     },
-    removeLabelFromQuestion(state, {qid, lid}) {
-      Vue.delete(state.project.questions[qid].labels, lid);
+    removeLabelFromQuestion(state, {pid, qid, lid}) {
+      Vue.delete(state.projects[pid].questions[qid].labels, lid);
     },
-    addLabelToAnswer(state, {qid, aid, lid}) {
-      Vue.set(state.project.questions[qid].answers[aid].labels, lid, Date.now());
+    addLabelToAnswer(state, {pid, qid, aid, lid}) {
+      Vue.set(state.projects[pid].questions[qid].answers[aid].labels, lid, Date.now());
     },
-    removeLabelFromAnswer(state, {qid, aid, lid}) {
-      Vue.delete(state.project.questions[qid].answers[aid].labels, lid);
+    removeLabelFromAnswer(state, {pid, qid, aid, lid}) {
+      Vue.delete(state.projects[pid].questions[qid].answers[aid].labels, lid);
     },
-    addAnswerIntoVariation(state, {qid, aid, vid}) {
-      Vue.set(state.project.questions[qid].answers[aid].variations, vid, Date.now());
+    addAnswerIntoVariation(state, {pid, qid, aid, vid}) {
+      Vue.set(state.projects[pid].questions[qid].answers[aid].variations, vid, Date.now());
     },
-    removeAnswerFromVariation(state, {qid, aid, vid}) {
-      Vue.delete(state.project.questions[qid].answers[aid].variations, vid);
+    removeAnswerFromVariation(state, {pid, qid, aid, vid}) {
+      Vue.delete(state.projects[pid].questions[qid].answers[aid].variations, vid);
     },
 
     // Front Only
-    addLabelToFilter(state, lid) {
-      state.filter.labels.push(lid)
+    addLabelToFilter(state, {pid, lid}) {
+      state.filters[pid].labels.push(lid)
     },
-    setSelectedLabels(state, selectedLabels) {
-      Vue.set(state.filter, 'labels', selectedLabels)
+    setSelectedLabels(state, {pid, selectedLabels}) {
+      Vue.set(state.filters[pid], 'labels', selectedLabels)
     },
-    setSelectedVariations(state, selectedVariations) {
-      Vue.set(state.filter, 'variations', selectedVariations)
+    setSelectedVariations(state, {pid, selectedVariations}) {
+      Vue.set(state.filters[pid], 'variations', selectedVariations)
     }
   },
 

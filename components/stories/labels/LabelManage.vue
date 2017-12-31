@@ -2,28 +2,30 @@
   .labelManageWrap
     h4 Labels
     .labelsWrap
-      EditLabel.label(v-for="label in getLabels", :key="label.id", :label="label")
-    NewLabel
+      EditLabel.label(v-for="label in getLabels", :key="label.id", :label="label", :pid="pid")
+    NewLabel(:pid="pid")
 </template>
 
 <script>
   import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGettersParam } from '../Util';
   import NewLabel from './NewLabel';
   import EditLabel from './EditLabel';
 
   export default {
     name: "LabelManage",
+    props: ['pid'],
     data() {
       return {
       }
     },
     computed: {
-      ...mapGetters('stories', ['getLabels'])
+      ...mapGettersParam('stories', { getLabels: 'pid' }),
     },
     methods: {
-      ...mapMutations('stories', ['editLabel', 'removeLabel']),
+      ...mapMutations('stories', ['editLabel']),
       onSave() {
-        this.addLabel({name: this.name, color: this.color});
+        this.addLabel({pid: this.pid, label: {name: this.name, color: this.color}});
         this.name = "";
       }
     },
