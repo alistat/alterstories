@@ -6,7 +6,7 @@
 
 <script>
   import { mapGetters, mapState } from 'vuex';
-  import { mapGettersParam } from './Util';
+  import { mapGettersParam } from '../Util';
 
   export default {
     name: "Variation",

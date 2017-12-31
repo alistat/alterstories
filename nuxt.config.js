@@ -18,6 +18,7 @@ module.exports = {
   },
   css: [
     'node_modules/vue-multiselect/dist/vue-multiselect.min.css',
+    'node_modules/vue-nav-tabs/themes/vue-tabs.css',
   ],
   /*
   ** Customize the progress bar color

@@ -45,7 +45,7 @@
   import {anyCommonArrayKey, mapToId, getLabels, getVariations} from './StoryStore';
   import { mapGettersParam } from './Util';
   import SLabel from './labels/SLabel';
-  import Variation from './Variation';
+  import Variation from './variations/Variation';
   import moment from 'moment';
   import Multiselect from 'vue-multiselect';
   import { SweetModal } from 'sweet-modal-vue'

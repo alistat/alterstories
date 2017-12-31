@@ -54,7 +54,7 @@ export function mapToId(arr) {
 export default {
   namespaced: true,
   state: {
-    allProjects: [
+    projectList: [
       {
         id: 0,
         name: "main"
@@ -90,17 +90,17 @@ export default {
     filters: {
       0: {
         labels: [],
-        variations:
-          [],
-        text:
-          "",
-        showOnlyFilteredAnswers:
-          false
+        variations: [],
+        text: "",
+        showOnlyFilteredAnswers: false
       }
     },
     readOnly: false
   },
   getters: {
+    getOpenProjects(state) {
+      return Object.values(state.projects)
+    },
     getProject(state) {
       return pid => state.projects[pid]
     },
@@ -169,6 +169,34 @@ export default {
     }
   },
   mutations: {
+    addProject(state, project) {
+      project = Object.assign({questions: {}, variations: {}, labels: {}}, project);
+      project.id = newId(state.projects);
+      Vue.set(state.projects, project.id, project);
+      Vue.set(
+        state.filters,
+        project.id,
+        {
+          labels: [],
+          variations: [],
+          text: "",
+          showOnlyFilteredAnswers: false
+        }
+      );
+      state.projectList.push({id: project.id, name: project.name});
+    },
+    editProject(state, {id: pid, name}) {
+      const project = state.projects[pid];
+      if (name !== undefined && name !== project.name) {
+        project.name = name;
+        state.projectList.filter(p => p.id === pid)[0].name = name;
+      }
+    },
+    deleteProject(state, {pid}) {
+      Vue.delete(state.projects, pid);
+      Vue.delete(state.filters, pid);
+      state.projectList = state.projectList.filter(p => p.id !== pid);
+    },
     addQuestion(state, {pid, question}) {
       const project = state.projects[pid];
       question = Object.assign({text: "", answers: {}, labels: {}}, question);
