@@ -19,6 +19,8 @@ export function mapToId(arr) {
 
 /*
   project
+    id
+    name
     questions
       id ->
         id

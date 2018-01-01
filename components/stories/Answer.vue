@@ -7,7 +7,8 @@
           @click="$refs.options.open()", title="Show Options")
     .content
       span.textWrap
-        input.text(v-model="answer.text")
+        ConfirmInput.text(:value="answer.text", @input="onEditText")
+        <!--input.text(v-model="answer.text")-->
         a.link(v-if="answer.link", :href="answer.link", title="Open link in new tab", target="_blank") {{linkDomain}}
       .metaWrap
         span.variationWrap
@@ -18,11 +19,12 @@
             :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
           span.noLabels(v-if="labelCount == 0") no labels
     sweet-modal.optionsArea(ref="options")
-      h2(slot="title") Answer Options
+      h2(slot="title") Answer "{{textCut}}"
       .optionsInner
         section
           h4.optionsHead(style="margin-top: 0;") Link
-          input.linkEdit(v-model="answer.link", type="url")
+          ConfirmInput.linkEdit(:value="answer.link", type="url", @input="onEditLink")
+          <!--input.linkEdit(v-model="answer.link", type="url")-->
         section
           h4.optionsHead Variations
           Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
@@ -37,6 +39,8 @@
           multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
             placeholder="Add Label", @input="onNewLabel", :disabled="newLabels.length == 0")
+      button.actionButton.deleteButton(slot="button", color="red", @click="onDelete") Remove Answer
+      button.actionButton.closeButton(slot="button", color="red", @click="$refs.options.close()") Close
 
 </template>
 
@@ -46,6 +50,7 @@
   import { mapGettersParam } from './Util';
   import SLabel from './labels/SLabel';
   import Variation from './variations/Variation';
+  import ConfirmInput from '../ConfirmInput';
   import moment from 'moment';
   import Multiselect from 'vue-multiselect';
   import { SweetModal } from 'sweet-modal-vue'
@@ -97,15 +102,46 @@
           return null
         }
       },
+      textCut() {
+        let text = this.answer.text;
+        if (text.length < 15) {
+          return text;
+        }
+        return text.substr(0, 14)+"..."
+      },
       labelCount() {
         return Object.keys(this.answer.labels).length;
       },
     },
     methods: {
       ...mapMutations('stories', ['addLabelToAnswer', 'removeLabelFromAnswer',
-          'addAnswerIntoVariation', 'removeAnswerFromVariation']),
+          'addAnswerIntoVariation', 'removeAnswerFromVariation', 'editAnswer', 'removeAnswer']),
       onDelete() {
-
+        this.removeAnswer({
+          pid: this.pid,
+          qid: this.question.id,
+          aid: this.answer.id
+        })
+      },
+      onEditText(newText) {
+        this.editAnswer({
+          pid: this.pid,
+          qid: this.question.id,
+          answer: {
+            id: this.answer.id,
+            text: newText
+          }
+        })
+      },
+      onEditLink(newLink) {
+        this.editAnswer({
+          pid: this.pid,
+          qid: this.question.id,
+          answer: {
+            id: this.answer.id,
+            link: newLink
+          }
+        })
       },
       onNewLabel() {
         if (this.newLabel !== null) {
@@ -152,6 +188,7 @@
     components: {
       SLabel,
       Variation,
+      ConfirmInput,
       Multiselect,
       SweetModal,
     },
@@ -181,30 +218,19 @@
     display: inline-block;
     /*height: 2.5rem;*/
   }
-  .text {
-    font-size: 1.15rem;
-    border-width: 0 0 1px 0;
-    border-color: darkslategray;
-    margin-right: 1rem;
-    margin-bottom: 0.1rem;
-    padding-left: 0.5rem;
-    color: #121212;
-  }
   .link {
-    margin-right: 0.8rem;
+    margin-left: 0.5rem;
     color: #1d1d1d;
     text-decoration: underline;
     font-style: italic;
     transition: color 0.1s;
+    //margin-top: -1.4rem;
+    vertical-align: super;
   }
   .link:hover {
     transition: color 0.1s;
     color: darkblue;
     text-decoration: none;
-  }
-  .text:focus {
-    border-color: darkblue;
-    border-width: 0 0 2px 0;
   }
   .addNew {
     max-width: 11rem;
@@ -235,17 +261,17 @@
     vertical-align: middle;
     /*margin-right: 0.5rem;*/
   }
-  .delete {
-    display: inline-block;
-    width: 1.5rem;
-    vertical-align: middle;
-    /*margin-right: 0.5rem;*/
-  }
   .optionsInner {
     text-align: start;
   }
   .optionsHead {
     margin: 1.5rem 0 0.6rem;
     font-size: 1.05rem;
+  }
+  .linkEdit {
+    width: 100%;
+  }
+  .deleteButton {
+    margin-right: 1rem;
   }
 </style>
