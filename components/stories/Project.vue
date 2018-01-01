@@ -6,6 +6,7 @@
       Question(v-for="q in getFilteredQuestions", :key='q.id', :question="q", :pid="pid")
     NewQuestion(:pid="pid")
     LabelManage(:pid="pid")
+    VariationManage(:pid="pid")
 </template>
 
 <script>
@@ -14,6 +15,7 @@
   import Question from './Question';
   import NewQuestion from './NewQuestion';
   import LabelManage from './labels/LabelManage';
+  import VariationManage from './variations/VariationManage';
   import SearchFilter from './SearchFilter';
 
   export default {
@@ -36,6 +38,7 @@
       Question,
       NewQuestion,
       LabelManage,
+      VariationManage,
     }
   }
 </script>

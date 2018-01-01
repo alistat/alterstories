@@ -1,8 +1,8 @@
 <template lang="pug">
-  .labelWrap
+  .variationWrap
     img.delete(@click="onDelete", src="https://png.icons8.com/color/50/000000/trash.png", title="Delete")
     span.nameWrap
-      input.name(v-model="name", @keyup.enter="onSave", @input="changedName=true", placeholder="Label name...")
+      input.name(v-model="name", @keyup.enter="onSave", @input="changedName=true", placeholder="Variation name...")
     span.colorWrap
       input.color(v-model="color", type="color", @input="changedColor=true")
     span.actionsWrap(v-show="changedName || changedColor")
@@ -14,39 +14,39 @@
   import { mapGetters, mapState, mapMutations } from 'vuex';
 
   export default {
-    name: "EditLabel",
-    props: ['pid', 'label'],
+    name: "EditVariation",
+    props: ['pid', 'variation'],
     data() {
       return {
-        name: this.label.name,
-        color: this.label.color,
+        name: this.variation.name,
+        color: this.variation.color,
         changedName: false,
         changedColor: false
       }
     },
     methods: {
-      ...mapMutations('stories', ['editLabel', 'removeLabel']),
+      ...mapMutations('stories', ['editVariation', 'removeVariation']),
       onSave() {
-        this.editLabel({pid: this.pid, label: {id: this.label.id, name: this.name, color: this.color}});
+        this.editVariation({pid: this.pid, variation: {id: this.variation.id, name: this.name, color: this.color}});
         this.changedName = false;
         this.changedColor = false;
       },
       onCancel() {
-        this.name = this.label.name;
-        this.color = this.label.color;
+        this.name = this.variation.name;
+        this.color = this.variation.color;
         this.changedName = false;
         this.changedColor = false;
       },
       onDelete() {
-        this.removeLabel({pid: this.pid, lid: this.label.id});
+        this.removeVariation({pid: this.pid, vid: this.variation.id});
       }
     },
     watch: {
-      label: {
+      variation: {
         deep: true,
-        handler(label) {
-          this.name = label.name;
-          this.color = label.color;
+        handler(variation) {
+          this.name = variation.name;
+          this.color = variation.color;
         }
       }
     }

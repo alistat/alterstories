@@ -245,14 +245,17 @@ export default {
     addVariation(state, {pid, variation}) {
       const project = state.projects[pid];
       variation.id = newId(project.variations);
-      project.variations[variation.id] = variation;
+      Vue.set(project.variations, variation.id, variation);
     },
     editVariation(state, {pid, variation: vari}) {
       const project = state.projects[pid];
-      const {id: vid, name} = vari;
+      const {id: vid, name, color} = vari;
       const variation = project.variations[vid];
       if (name !== undefined && name !== variation.name) {
         variation.name = name;
+      }
+      if (color !== undefined && color !== variation.color) {
+        variation.color = color;
       }
     },
     removeVariation(state, {pid, vid}) {
