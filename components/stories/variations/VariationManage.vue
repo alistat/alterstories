@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGetters, mapState, mapActions } from 'vuex';
   import { mapGettersParam } from '../Util';
   import NewVariation from './NewVariation';
   import EditVariation from './EditVariation';
@@ -23,7 +23,7 @@
       ...mapGettersParam('stories', { getVariations: 'pid' }),
     },
     methods: {
-      ...mapMutations('stories', ['editVariation']),
+      ...mapActions('stories', ['editVariation']),
       onSave() {
         this.addVariation({pid: this.pid, variation: {name: this.name, color: this.color}});
         this.name = "";

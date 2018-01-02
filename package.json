@@ -11,6 +11,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@funjs/route-parser": "^1.4.0",
+    "axios": "^0.17.1",
     "moment": "^2.20.1",
     "node-sass": "^4.7.2",
     "nuxt": "^1.0.0-rc11",

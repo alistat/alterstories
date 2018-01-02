@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import { mapMutations, mapState } from 'vuex';
+  import { mapMutations, mapState, mapActions } from 'vuex';
 
   export default {
     name: "OpenProject",
@@ -19,7 +19,7 @@
       ...mapState('stories', ['projectList', 'projects'])
     },
     methods: {
-      ...mapMutations('stories', ['addProject']),
+      ...mapActions('stories', ['loadProjectList', 'loadProject', 'addProject']),
       projectIsOpen(pid) {
         return this.projects.hasOwnProperty(pid);
       },
@@ -32,8 +32,17 @@
         this.newProjectName = "";
       },
       onSelect(pid) {
-        this.$emit('selected', pid);
+        if (!this.projectIsOpen(pid)) {
+          this.loadProject(pid)
+            .then(() => this.$emit('selected', pid));
+        } else {
+          this.$emit('selected', pid);
+        }
+
       }
+    },
+    created() {
+      this.loadProjectList();
     }
   }
 </script>

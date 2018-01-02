@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGetters, mapState, mapActions } from 'vuex';
 
   export default {
     name: "NewVariation",
@@ -22,7 +22,7 @@
       }
     },
     methods: {
-      ...mapMutations('stories', ['addVariation']),
+      ...mapActions('stories', ['addVariation']),
       onSave() {
         this.addVariation({pid: this.pid, variation: {name: this.name, color: this.color}});
         this.name = "";

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGetters, mapState, mapActions } from 'vuex';
   import { mapGettersParam } from '../Util';
   import NewLabel from './NewLabel';
   import EditLabel from './EditLabel';
@@ -23,7 +23,7 @@
       ...mapGettersParam('stories', { getLabels: 'pid' }),
     },
     methods: {
-      ...mapMutations('stories', ['editLabel']),
+      ...mapActions('stories', ['editLabel']),
       onSave() {
         this.addLabel({pid: this.pid, label: {name: this.name, color: this.color}});
         this.name = "";

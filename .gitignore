@@ -12,3 +12,6 @@ dist
 
 # IDE
 .idea
+
+# environment conf
+config/environment.js

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations, mapGetters } from 'vuex'
+  import { mapState, mapActions, mapGetters } from 'vuex'
   import { mapGettersParam } from './Util';
   import Question from './Question';
   import NewQuestion from './NewQuestion';
@@ -31,7 +31,6 @@
       ...mapGettersParam('stories', {getFilteredQuestions: 'pid', getProject: 'pid', getFilter: 'pid' })
     },
     methods: {
-      ...mapMutations('stories', ['addQuestion'])
     },
     components: {
       SearchFilter,

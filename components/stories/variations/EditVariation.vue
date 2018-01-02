@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGetters, mapState, mapActions } from 'vuex';
 
   export default {
     name: "EditVariation",
@@ -25,7 +25,7 @@
       }
     },
     methods: {
-      ...mapMutations('stories', ['editVariation', 'removeVariation']),
+      ...mapActions('stories', ['editVariation', 'removeVariation']),
       onSave() {
         this.editVariation({pid: this.pid, variation: {id: this.variation.id, name: this.name, color: this.color}});
         this.changedName = false;

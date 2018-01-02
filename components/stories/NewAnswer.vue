@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'NewAnswer',
@@ -24,7 +24,7 @@
     computed: {
     },
     methods: {
-      ...mapMutations('stories', ['addAnswer']),
+      ...mapActions('stories', ['addAnswer']),
       onSave() {
         this.addAnswer({pid: this.pid, qid: this.question.id, answer: {text: this.text, link: this.link}});
         this.text = "";

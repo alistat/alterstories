@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGetters, mapState, mapActions } from 'vuex';
 
   export default {
     name: "EditLabel",
@@ -25,7 +25,7 @@
       }
     },
     methods: {
-      ...mapMutations('stories', ['editLabel', 'removeLabel']),
+      ...mapActions('stories', ['editLabel', 'removeLabel']),
       onSave() {
         this.editLabel({pid: this.pid, label: {id: this.label.id, name: this.name, color: this.color}});
         this.changedName = false;

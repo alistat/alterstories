@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapState } from 'vuex'
+  import { mapGetters, mapActions, mapState } from 'vuex'
   import {anyCommonArrayKey, mapToId, getLabels, getVariations} from './StoryStore';
   import { mapGettersParam } from './Util';
   import SLabel from './labels/SLabel';
@@ -114,7 +114,7 @@
       },
     },
     methods: {
-      ...mapMutations('stories', ['addLabelToAnswer', 'removeLabelFromAnswer',
+      ...mapActions('stories', ['addLabelToAnswer', 'removeLabelFromAnswer',
           'addAnswerIntoVariation', 'removeAnswerFromVariation', 'editAnswer', 'removeAnswer']),
       onDelete() {
         this.removeAnswer({

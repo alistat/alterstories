@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapState, mapActions } from 'vuex'
   import Answer from './Answer';
   import NewAnswer from './NewAnswer';
 

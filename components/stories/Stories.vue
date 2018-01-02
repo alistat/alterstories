@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import { mapMutations, mapState, mapGetters } from 'vuex';
+  import { mapActions, mapState, mapGetters } from 'vuex';
   import Vue from 'vue';
   import {VueTabs, VTab} from 'vue-nav-tabs'
   import Project from './Project';
@@ -23,14 +23,15 @@
       }
     },
     computed: {
-      ...mapGetters('stories', ['getOpenProjects'])
+      ...mapGetters('stories', ['getOpenProjects']),
+      ...mapState('stories', ['projects'])
     },
     methods: {
       onAdded(name) {
         Vue.nextTick(() => this.openTab = name);
       },
-      onSelected(name) {
-        this.openTab = name;
+      onSelected(pid) {
+        Vue.nextTick(() => this.openTab = this.projects[pid].name);
       }
     },
     components: {

@@ -2,6 +2,10 @@
 
 > System for collaborative script development
 
+## Configuration
+Environment 
+Copy ```config/environment-example.js``` to ```config/environment.js``` for a quick start
+
 ## Build Setup
 
 ``` bash

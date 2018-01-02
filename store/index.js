@@ -1,11 +1,13 @@
 import Vuex from 'vuex';
 import StoriesStore from '../components/stories/StoryStore';
 import UserStore from '../components/users/UserStore';
+import enviroment from '../config/environment';
 
 const createStore = () => {
   return new Vuex.Store({
     state: {
-      pageHead: 'alterstories'
+      pageHead: 'alterstories',
+      enviroment,
     },
     mutations: {
       setPageHead(state, head) {

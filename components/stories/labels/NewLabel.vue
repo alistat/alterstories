@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex';
+  import { mapGetters, mapState, mapMutations, mapActions } from 'vuex';
 
   export default {
     name: "NewLabel",
@@ -22,7 +22,7 @@
       }
     },
     methods: {
-      ...mapMutations('stories', ['addLabel']),
+      ...mapActions('stories', ['addLabel']),
       onSave() {
         this.addLabel({pid: this.pid, label: {name: this.name, color: this.color}});
         this.name = "";

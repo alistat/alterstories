@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapState, mapActions } from 'vuex'
 
   export default {
     name: 'NewQuestion',
@@ -21,7 +21,7 @@
     computed: {
     },
     methods: {
-      ...mapMutations('stories', ['addQuestion']),
+      ...mapActions('stories', ['addQuestion']),
       onSave() {
         this.addQuestion({pid: this.pid, question: {text: this.text}});
         this.text = ""
