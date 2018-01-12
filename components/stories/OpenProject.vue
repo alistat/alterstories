@@ -1,7 +1,7 @@
 <template lang="pug">
   .openProjectWrap
     ul.projects
-      li.project(v-for="project in projectList", :key="project.id", :class="{open: projectIsOpen(project.id)}", @click="onSelect(project.id)") {{project.name}}
+      li.project(v-for="project in projectList", :key="project._id", :class="{open: projectIsOpen(project._id)}", @click="onSelect(project._id)") {{project.name}}
     input(v-model="newProjectName", placeholder="New project name", @keyup.enter="onNew")
 </template>
 

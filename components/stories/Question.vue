@@ -3,7 +3,7 @@
     .textWrap
       input.text(v-model="question.text")
     .answersWrap
-      Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer.id',
+      Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer._id',
         :answer="answer", :question="question", :pid="pid", :index="i")
       NewAnswer(:question="question", :pid="pid")
 </template>

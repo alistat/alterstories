@@ -1,8 +1,8 @@
 <template lang="pug">
   .storiesWrap
     vue-tabs(v-model="openTab")
-      v-tab(v-for="project in getOpenProjects", :key="project.id", :title="project.name")
-        Project(:pid="project.id")
+      v-tab(v-for="project in getOpenProjects", :key="project._id", :title="project.name")
+        Project(:pid="project._id")
       v-tab(title="+")
         OpenProject(@selected="onSelected", @added="onAdded")
 

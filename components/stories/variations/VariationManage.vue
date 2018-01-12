@@ -2,7 +2,7 @@
   .variationManageWrap
     h4 Variations
     .variationsWrap
-      EditVariation.variation(v-for="variation in getVariations", :key="variation.id", :variation="variation", :pid="pid")
+      EditVariation.variation(v-for="variation in getVariations", :key="variation._id", :variation="variation", :pid="pid")
     NewVariation(:pid="pid")
 </template>
 

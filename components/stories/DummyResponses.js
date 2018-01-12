@@ -1,42 +1,43 @@
 import {newIntId, newIntIdArr} from '../../vuex-rester';
 
 export default {
-  'GET /projectList': [{id: 0, name: 'main'}, {id: 1, name: 'Σκηνικά'}],
+  'GET /projectList': [{_id: 0, name: 'main'}, {_id: 1, name: 'Σκηνικά'}],
   'GET /project/0': {
-    id: 0,
+    _id: 0,
     name: "main",
-    questions: [
-      {
-        id: 0,
+    questions: {
+      0: {
+        _id: 0,
         text: "Why",
-        labels: [],
-        answers: []
+        labels: {},
+        answers: {}
       }
-    ],
+    },
     labels: [],
-    variations: [
-      {
-        id: 0,
+    variations: {
+      0: {
+        _id: 0,
         name: "master",
         color: "#0f0f41"
-      }, {
-        id: 1,
+      },
+      1: {
+        _id: 1,
         name: "second",
         color: "#7c7a7a"
       }
-    ]
+    }
   },
   'GET /project/1': {
-    id: 1,
+    _id: 1,
     name: "Σκηνικά",
     questions: [
       {
-        id: 0,
+        _id: 0,
         text: "Τι θα φοράμε στο κεφάλι μας",
         labels: [],
         answers: [
           {
-            id: 0,
+            _id: 0,
             text: 'Καπέλο',
             link: '',
             labels: [
@@ -48,7 +49,7 @@ export default {
             ],
             variations: []
           }, {
-            id: 1,
+            _id: 1,
             text: 'Σκουφί',
             link: 'http://giorgiohatter.gr/image/winter%2016/skoufia/bnu16515.jpg',
             labels: [
@@ -58,25 +59,25 @@ export default {
                 addedAt: 1514866259733
               }
             ],
-            variations: []
+            variations: {}
           }
         ]
       }
     ],
     labels: [
       {
-        id: 0,
+        _id: 0,
         name: "Όλα μαύρα",
         color: "#7c7a7a"
       }, {
-        id: 1,
+        _id: 1,
         name: "Πόδια πόδια",
         color: "#ba3946"
       }
     ],
     variations: [
       {
-        id: 0,
+        _id: 0,
         name: "master",
         color: "#0f0f41"
       },
@@ -84,21 +85,21 @@ export default {
   },
 
   'POST /project': function ({state}, urlParams, mutParam, apiParam) {
-    return {  id: newIntIdArr(state.projectList),
+    return {  _id: newIntIdArr(state.projectList),
       name: apiParam.name, variations: [], labels: [] }
   },
   'POST /question/:pid': function ({state}, urlParams, mutParam, apiParam) {
-    return {  id: newIntId(state.projects[(+urlParams.pid)].questions),
+    return {  _id: newIntId(state.projects[(+urlParams.pid)].questions),
       text: apiParam.text, answers: [], labels: [] }
   },
   'POST /label/:pid': function ({state}, urlParams, mutParam, apiParam) {
-    return {  id: newIntId(state.projects[+urlParams.pid].labels), ...apiParam  }
+    return {  _id: newIntId(state.projects[+urlParams.pid].labels), ...apiParam  }
   },
   'POST /variation/:pid': function ({state}, urlParams, mutParam, apiParam) {
-    return {  id: newIntId(state.projects[+urlParams.pid].variations), ...apiParam  }
+    return {  _id: newIntId(state.projects[+urlParams.pid].variations), ...apiParam  }
   },
   'POST /answer/:pid/:qid': function ({state}, urlParams, mutParam, apiParam) {
-    return {  id: newIntId(state.projects[+urlParams.pid].questions[+urlParams.qid].answers),
+    return {  _id: newIntId(state.projects[+urlParams.pid].questions[+urlParams.qid].answers),
       text: apiParam.text, link: apiParam.link }
   }
 }

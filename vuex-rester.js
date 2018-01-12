@@ -5,18 +5,20 @@ export const IDENTITY = x => x;
 export const ONLY_MUT_PARAM = (x, y) => x;
 export const ONLY_RESPONSE = (x, y) => y;
 
-export function newIntId(elems, idField='id') {
+export function newIntId(elems, idField='_id') {
   return newIntIdArr(Object.values(elems), idField);
 }
 
-export function newIntIdArr(elems, idField='id') {
-  return elems.map(el => el[idField]).reduce((a,b) => Math.max(a,b), -1)+1;
+export function newIntIdArr(elems, idField='_id') {
+  return elems.filter(el => el[idField] !== undefined).map(el => el[idField]).reduce((a,b) => Math.max(a,b), -1)+1;
 }
 
-export function arrayToMapById(arr, idField='id') {
+export function arrayToMapById(arr, idField='_id') {
   const result = {};
   for (const el of arr) {
-    result[el[idField]] = el;
+    if (el[idField] !== undefined) {
+      result[el[idField]] = el;
+    }
   }
   return result;
 }
@@ -58,7 +60,9 @@ function routeRequest(verb, dummies, ctx, apiPath, mutParam, apiParam) {
 
 
 export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefaults={}}) {
-  const ax = axios.create({baseUrl, ...axiosDefaults});
+  axiosDefaults.baseUrl = baseUrl;
+  console.log(axiosDefaults);
+  const ax = axios.create(axiosDefaults);
   if (dummy) {
     dummyResponses = parseDummyResponses(dummyResponses);
   }
@@ -71,7 +75,7 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
         return Promise.resolve();
       }
       return new Promise((resolve, reject) => {
-        ax.get(apiPath)
+        ax.get(baseUrl+apiPath)
           .then(resp => {
             ctx.commit(mutation, respMap(resp.data));
             resolve();
@@ -86,7 +90,7 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
         return Promise.resolve();
       }
       return new Promise((resolve, reject) => {
-        ax.post(apiPath, apiParam)
+        ax.post(baseUrl+apiPath, apiParam)
           .then(resp => {
             ctx.commit(mutation, respCombine(mutParam, resp.data));
             resolve();
@@ -101,7 +105,7 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
         return Promise.resolve();
       }
       return new Promise((resolve, reject) => {
-        ax.patch(apiPath, apiParam)
+        ax.patch(baseUrl+apiPath, apiParam)
           .then(resp => {
             ctx.commit(mutation, respCombine(mutParam, resp.data));
             resolve();
@@ -116,7 +120,7 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
         return Promise.resolve();
       }
       return new Promise((resolve, reject) => {
-        ax.put(apiPath, apiParam)
+        ax.put(baseUrl+apiPath, apiParam)
           .then(resp => {
             ctx.commit(mutation, respCombine(mutParam, resp.data));
             resolve();
@@ -131,7 +135,7 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
         return Promise.resolve();
       }
       return new Promise((resolve, reject) => {
-        ax.delete(apiPath)
+        ax.delete(baseUrl+apiPath)
           .then(() => {
             ctx.commit(mutation, mutParam);
             resolve();

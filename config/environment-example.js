@@ -1,4 +1,4 @@
 export default {
-  backendURL: "http://localhost:3000/api",
+  backendURL: "http://localhost:3001/",
   dummyBackend: true
 }

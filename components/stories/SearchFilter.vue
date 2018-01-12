@@ -3,10 +3,10 @@
     h4 Filter
     .labelWrap
       multiselect(:value="getSelectedLabels", :options="getLabels", :multiple="true",
-        label="name", track-by="id", placeholder="Filter by label", @input="onSetLabels")
+        label="name", track-by="_id", placeholder="Filter by label", @input="onSetLabels")
     .variationWrap
       multiselect(:value="getSelectedVariations", :options="getVariations", :multiple="true",
-        label="name", track-by="id", placeholder="Filter by variation", @input="onSetVariations")
+        label="name", track-by="_id", placeholder="Filter by variation", @input="onSetVariations")
 </template>
 
 <script>

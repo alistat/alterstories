@@ -27,7 +27,7 @@
     methods: {
       ...mapActions('stories', ['editVariation', 'removeVariation']),
       onSave() {
-        this.editVariation({pid: this.pid, variation: {id: this.variation.id, name: this.name, color: this.color}});
+        this.editVariation({pid: this.pid, variation: {_id: this.variation._id, name: this.name, color: this.color}});
         this.changedName = false;
         this.changedColor = false;
       },
@@ -38,7 +38,7 @@
         this.changedColor = false;
       },
       onDelete() {
-        this.removeVariation({pid: this.pid, vid: this.variation.id});
+        this.removeVariation({pid: this.pid, vid: this.variation._id});
       }
     },
     watch: {

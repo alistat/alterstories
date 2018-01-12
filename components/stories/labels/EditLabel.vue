@@ -27,7 +27,7 @@
     methods: {
       ...mapActions('stories', ['editLabel', 'removeLabel']),
       onSave() {
-        this.editLabel({pid: this.pid, label: {id: this.label.id, name: this.name, color: this.color}});
+        this.editLabel({pid: this.pid, label: {_id: this.label._id, name: this.name, color: this.color}});
         this.changedName = false;
         this.changedColor = false;
       },
@@ -38,7 +38,7 @@
         this.changedColor = false;
       },
       onDelete() {
-        this.removeLabel({pid: this.pid, lid: this.label.id});
+        this.removeLabel({pid: this.pid, lid: this.label._id});
       }
     },
     watch: {

@@ -29,14 +29,14 @@
           h4.optionsHead Variations
           Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)")
-          multiselect.addNew(v-model="newVariation", :options="newVariations", label="name", track-by="id", :multiple="false",
+          multiselect.addNew(v-model="newVariation", :options="newVariations", label="name", track-by="_id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='',
             placeholder="Add to Variation", @input="onNewVariation", :disabled="newVariations.length == 0")
         section
           h4.optionsHead Labels
           SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
-          multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="id", :multiple="false",
+          multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="_id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
             placeholder="Add Label", @input="onNewLabel", :disabled="newLabels.length == 0")
       button.actionButton.deleteButton(slot="button", color="red", @click="onDelete") Remove Answer
@@ -79,14 +79,14 @@
         labelsMap: 'pid', getLabels: 'pid', getVariations: 'pid', getFilter: 'pid'
       }),
       newLabels() {
-        return this.getLabels.filter(label => !this.answer.labels.hasOwnProperty(label.id));
+        return this.getLabels.filter(label => !this.answer.labels.hasOwnProperty(label._id));
       },
       newVariations() {
         let usedVariations = {};
         for (const a of Object.values(this.question.answers)) {
           Object.assign(usedVariations, a.variations);
         }
-        return this.getVariations.filter(variation => !usedVariations.hasOwnProperty(variation.id));
+        return this.getVariations.filter(variation => !usedVariations.hasOwnProperty(variation._id));
       },
       passesFilter() {
         const vari =  this.getFilter.variations.length === 0
@@ -119,16 +119,16 @@
       onDelete() {
         this.removeAnswer({
           pid: this.pid,
-          qid: this.question.id,
-          aid: this.answer.id
+          qid: this.question._id,
+          aid: this.answer._id
         })
       },
       onEditText(newText) {
         this.editAnswer({
           pid: this.pid,
-          qid: this.question.id,
+          qid: this.question._id,
           answer: {
-            id: this.answer.id,
+            _id: this.answer._id,
             text: newText
           }
         })
@@ -136,9 +136,9 @@
       onEditLink(newLink) {
         this.editAnswer({
           pid: this.pid,
-          qid: this.question.id,
+          qid: this.question._id,
           answer: {
-            id: this.answer.id,
+            _id: this.answer._id,
             link: newLink
           }
         })
@@ -147,9 +147,9 @@
         if (this.newLabel !== null) {
           this.addLabelToAnswer({
             pid: this.pid,
-            qid: this.question.id,
-            aid: this.answer.id,
-            lid: this.newLabel.id
+            qid: this.question._id,
+            aid: this.answer._id,
+            lid: this.newLabel._id
           });
           this.newLabel = null;
         }
@@ -157,8 +157,8 @@
       onLabelRemove(lid) {
         this.removeLabelFromAnswer({
           pid: this.pid,
-          qid: this.question.id,
-          aid: this.answer.id,
+          qid: this.question._id,
+          aid: this.answer._id,
           lid
         })
       },
@@ -166,9 +166,9 @@
         if (this.newVariation !== null) {
           this.addAnswerIntoVariation({
             pid: this.pid,
-            qid: this.question.id,
-            aid: this.answer.id,
-            vid: this.newVariation.id
+            qid: this.question._id,
+            aid: this.answer._id,
+            vid: this.newVariation._id
           });
           this.newVariation = null;
         }
@@ -176,8 +176,8 @@
       onVariationRemove(vid) {
         this.removeAnswerFromVariation({
           pid: this.pid,
-          qid: this.question.id,
-          aid: this.answer.id,
+          qid: this.question._id,
+          aid: this.answer._id,
           vid
         })
       },

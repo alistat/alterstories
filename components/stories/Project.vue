@@ -3,7 +3,7 @@
     SearchFilter(:pid="pid")
     .questionsWrap
       h3 Questions
-      Question(v-for="q in getFilteredQuestions", :key='q.id', :question="q", :pid="pid")
+      Question(v-for="q in getFilteredQuestions", :key='q._id', :question="q", :pid="pid")
     NewQuestion(:pid="pid")
     LabelManage(:pid="pid")
     VariationManage(:pid="pid")

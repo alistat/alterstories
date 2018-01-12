@@ -6,7 +6,7 @@ import VuexRester from '../../vuex-rester';
 import { ONLY_RESPONSE, arrayToMapById } from '../../vuex-rester';
 
 const rester = VuexRester({
-  dummy :enviroment.dummyBackend, baseUrl: enviroment.backendURL, dummyResponses: DummyResponses
+  dummy :enviroment.dummyBackend, baseUrl: enviroment.backendURL+'stories', dummyResponses: DummyResponses
 });
 
 export function anyCommonArrayKey(arr, obj) {
@@ -19,12 +19,13 @@ export function anyCommonArrayKey(arr, obj) {
 }
 
 export function mapToId(arr) {
-  return arr.map(el => el.id);
+  return arr.map(el => el._id);
 }
 
 function preprocessAnswer(a) {
   a.labels = arrayToMapById(a.labels, 'lid');
   a.variations = arrayToMapById(a.variations, 'vid');
+  return a;
 }
 
 function preprocessQuestion(q) {
@@ -173,10 +174,10 @@ export default {
     },
     setProject(state, project) {
       project = preprocessProject(project);
-      Vue.set(state.projects, project.id, project);
+      Vue.set(state.projects, project._id, project);
       Vue.set(
         state.filters,
-        project.id,
+        project._id,
         {
           labels: [],
           variations: [],
@@ -188,10 +189,10 @@ export default {
     addProject(state, project) {
       project = Object.assign({questions: [], variations: [], labels: []}, project);
       project = preprocessProject(project);
-      Vue.set(state.projects, project.id, project);
+      Vue.set(state.projects, project._id, project);
       Vue.set(
         state.filters,
-        project.id,
+        project._id,
         {
           labels: [],
           variations: [],
@@ -199,25 +200,25 @@ export default {
           showOnlyFilteredAnswers: false
         }
       );
-      state.projectList.push({id: project.id, name: project.name});
+      state.projectList.push({_id: project._id, name: project.name});
     },
-    editProject(state, {id: pid, name}) {
+    editProject(state, {_id: pid, name}) {
       const project = state.projects[pid];
       if (name !== undefined && name !== project.name) {
         project.name = name;
-        state.projectList.filter(p => p.id === pid)[0].name = name;
+        state.projectList.filter(p => p._id === pid)[0].name = name;
       }
     },
     deleteProject(state, {pid}) {
       Vue.delete(state.projects, pid);
       Vue.delete(state.filters, pid);
-      state.projectList = state.projectList.filter(p => p.id !== pid);
+      state.projectList = state.projectList.filter(p => p._id !== pid);
     },
     addQuestion(state, {pid, question}) {
       const project = state.projects[pid];
       question = Object.assign({text: "", answers: [], labels: []}, question);
       preprocessQuestion(question);
-      Vue.set(project.questions, question.id, question);
+      Vue.set(project.questions, question._id, question);
     },
     editQuestion(state, {pid, question}) {
       const project = state.projects[pid];
@@ -232,11 +233,11 @@ export default {
     },
     addLabel(state, {pid, label}) {
       const project = state.projects[pid];
-      Vue.set(project.labels, label.id, label)
+      Vue.set(project.labels, label._id, label)
     },
     editLabel(state, {pid, label: lbl}) {
       const project = state.projects[pid];
-      const {id: lid, name, color} = lbl;
+      const {_id: lid, name, color} = lbl;
       const label = project.labels[lid];
       if (name !== undefined && name !== label.name) {
         label.name = name;
@@ -257,11 +258,11 @@ export default {
     },
     addVariation(state, {pid, variation}) {
       const project = state.projects[pid];
-      Vue.set(project.variations, variation.id, variation);
+      Vue.set(project.variations, variation._id, variation);
     },
     editVariation(state, {pid, variation: vari}) {
       const project = state.projects[pid];
-      const {id: vid, name, color} = vari;
+      const {_id: vid, name, color} = vari;
       const variation = project.variations[vid];
       if (name !== undefined && name !== variation.name) {
         variation.name = name;
@@ -283,10 +284,10 @@ export default {
       const question = state.projects[pid].questions[qid];
       answer = Object.assign({text: '', labels: [], variations: []}, answer);
       preprocessAnswer(answer);
-      Vue.set(question.answers, answer.id, answer);
+      Vue.set(question.answers, answer._id, answer);
     },
     editAnswer(state, {pid, qid, answer: newAnswer}) {
-      const answer = state.projects[pid].questions[qid].answers[newAnswer.id];
+      const answer = state.projects[pid].questions[qid].answers[newAnswer._id];
       if (newAnswer.text !== undefined && newAnswer.text !== answer.text) {
         answer.text = newAnswer.text;
       }
@@ -342,7 +343,7 @@ export default {
         'addProject', null, ONLY_RESPONSE)
     },
     editProject(ctx, project) {
-      return rester.apiPatch(ctx, '/project/'+project.id, {name: project.name},
+      return rester.apiPatch(ctx, '/project/'+project._id, {name: project.name},
         'editProject', project)
     },
     deleteProject(ctx, pid) {
@@ -354,7 +355,7 @@ export default {
         'addQuestion', null, (_, resp) => ({pid, question: resp}))
     },
     editQuestion(ctx, {pid, question}) {
-      return rester.apiPatch(ctx, `/question/${pid}/${question.id}`, question,
+      return rester.apiPatch(ctx, `/question/${pid}/${question._id}`, question,
         'editQuestion', null, (_, resp) => ({pid, question}))
     },
     removeQuestion(ctx, {pid, qid}) {
@@ -366,7 +367,7 @@ export default {
         'addLabel', null, (_, resp) => ({pid, label: resp}))
     },
     editLabel(ctx, {pid, label}) {
-      return rester.apiPatch(ctx, `/label/${pid}/${label.id}`, label,
+      return rester.apiPatch(ctx, `/label/${pid}/${label._id}`, label,
         'editLabel', null, (_, resp) => ({pid, label}))
     },
     removeLabel(ctx, {pid, lid}) {
@@ -378,7 +379,7 @@ export default {
         'addVariation', null, (_, resp) => ({pid, variation: resp}))
     },
     editVariation(ctx, {pid, variation}) {
-      return rester.apiPatch(ctx, `/variation/${pid}/${variation.id}`, variation,
+      return rester.apiPatch(ctx, `/variation/${pid}/${variation._id}`, variation,
         'editVariation', null, (_, resp) => ({pid, variation: resp}))
     },
     removeVariation(ctx, {pid, vid}) {
@@ -390,7 +391,7 @@ export default {
         'addAnswer', null, (_, resp) => ({pid, qid, answer: resp}))
     },
     editAnswer(ctx, {pid, qid, answer}) {
-      return rester.apiPost(ctx, `/answer/${pid}/${qid}/${answer.id}`, answer,
+      return rester.apiPost(ctx, `/answer/${pid}/${qid}/${answer._id}`, answer,
         'editAnswer', null, (_, resp) => ({pid, qid, answer}))
     },
     removeAnswer(ctx, {pid, qid, aid}) {

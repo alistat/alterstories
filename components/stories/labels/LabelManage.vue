@@ -2,7 +2,7 @@
   .labelManageWrap
     h4 Labels
     .labelsWrap
-      EditLabel.label(v-for="label in getLabels", :key="label.id", :label="label", :pid="pid")
+      EditLabel.label(v-for="label in getLabels", :key="label._id", :label="label", :pid="pid")
     NewLabel(:pid="pid")
 </template>
 

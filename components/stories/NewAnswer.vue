@@ -26,7 +26,7 @@
     methods: {
       ...mapActions('stories', ['addAnswer']),
       onSave() {
-        this.addAnswer({pid: this.pid, qid: this.question.id, answer: {text: this.text, link: this.link}});
+        this.addAnswer({pid: this.pid, qid: this.question._id, answer: {text: this.text, link: this.link}});
         this.text = "";
         this.link = "";
       }
