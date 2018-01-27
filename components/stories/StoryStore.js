@@ -222,7 +222,7 @@ export default {
     },
     editQuestion(state, {pid, question}) {
       const project = state.projects[pid];
-      const {qid, text} = question;
+      const {_id: qid, text} = question;
       question = project.questions[qid];
       if (text !== undefined && text !== question.text) {
         question.text = text;
@@ -391,7 +391,7 @@ export default {
         'addAnswer', null, (_, resp) => ({pid, qid, answer: resp}))
     },
     editAnswer(ctx, {pid, qid, answer}) {
-      return rester.apiPost(ctx, `/answer/${pid}/${qid}/${answer._id}`, answer,
+      return rester.apiPatch(ctx, `/answer/${pid}/${qid}/${answer._id}`, answer,
         'editAnswer', null, (_, resp) => ({pid, qid, answer}))
     },
     removeAnswer(ctx, {pid, qid, aid}) {
