@@ -1,10 +1,12 @@
 <template lang="pug">
   .confirmInputInnerWrap
     .inputWrap
-      input(v-model="val", @input="onInput", type="url", v-if="type=='url'")
-      input(v-model="val", @input="onInput", type="date", v-else-if="type=='date'")
-      input(v-model="val", @input="onInput", type="number", v-else-if="type=='number'")
-      input(v-model="val", @input="onInput", type="text", v-else="type=='text'")
+      input(v-model="val", @input="onInput", type="url", v-if="type=='url'", :placeholder="placeholder")
+      input(v-model="val", @input="onInput", type="date", v-else-if="type=='date'", :placeholder="placeholder")
+      input(v-model="val", @input="onInput", type="number", v-else-if="type=='number'", :placeholder="placeholder")
+      input(v-model="val", @input="onInput", type="email", v-else-if="type=='email'", :placeholder="placeholder")
+      input(v-model="val", @input="onInput", type="password", v-else-if="type=='password'", :placeholder="placeholder")
+      input(v-model="val", @input="onInput", type="text", v-else="type=='text'", :placeholder="placeholder")
       .changed(v-if="value != lastSavedValue && value != val") Current value is {{value}}
     .controls(:class="{hidden: value == val}")
       img.save(src="https://png.icons8.com/color/50/000000/checked-2.png", @click="onSave", title="Save")
@@ -14,7 +16,7 @@
 <script>
   export default {
     name: "ConfirmInput",
-    props: {value: {'default': ''}, type: {'default': 'text'}},
+    props: {value: {'default': ''}, type: {'default': 'text'}, placeholder: {'default': ''}},
     data() {
       return {
         val: this.value,

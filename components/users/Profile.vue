@@ -6,7 +6,7 @@
   import { mapGetters, mapMutations } from 'vuex'
 
   export default {
-    name: 'Answer',
+    name: 'Profile',
     data() {
       return {
 

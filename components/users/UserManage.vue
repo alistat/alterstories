@@ -1,26 +1,40 @@
 <template lang="pug">
-
+  .wrap
+    .usersWrap
+      User.user(v-for="user in users", :user="user", :key="user._id")
+    NewUser
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
+  import User from './User'
+  import NewUser from './NewUser'
 
   export default {
-    name: 'Answer',
+    name: 'UserManage',
     data() {
       return {
 
       }
     },
     computed: {
-      // ...mapGetters({quests: 'getSaved', drafts: 'getDrafts'})
+      ...mapState('users', ['users', 'roles']),
     },
     methods: {
-      // ...mapMutations(['removeSaved', 'removeDraft'])
+      ...mapActions('users', ['loadUsers'])
+    },
+    components: {
+      User,
+      NewUser
+    },
+    created() {
+      this.loadUsers();
     }
   }
 </script>
 
-<style lang="scss">
-
+<style scoped lang="scss">
+  .user {
+    max-width: 35rem;
+  }
 </style>
