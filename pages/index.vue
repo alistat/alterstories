@@ -1,11 +1,14 @@
 <template lang="pug">
-  .indexWrap
+  .projectWrap
+    Stories
 </template>
 
 <script>
+  import Stories from "~/components/stories/Stories.vue";
+
   export default {
     head: {
-      title: 'alterstories',
+      title: 'project',
       link: [{
         hid: "canonical",
         rel: "canonical",
@@ -24,9 +27,10 @@
       }
     },
     components: {
+      Stories
     },
     beforeCreate() {
-      this.$store.commit('setPageHead', 'index');
+      this.$store.commit('setPageHead', 'project');
     }
   }
 </script>

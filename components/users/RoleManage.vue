@@ -1,34 +1,31 @@
 <template lang="pug">
   .wrap
-    .usersWrap
-      User.user(v-for="user in users", :user="user", :key="user._id")
-    NewUser
+    .rolesWrap
+      Role.role(v-for="role in roles", :role="role", :key="role._id")
+    NewRole.newRole
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import User from './User'
-  import NewUser from './NewUser'
-
-  import Login from './Login'
+  import Role from './Role'
+  import NewRole from './NewRole'
 
   export default {
-    name: 'UserManage',
+    name: 'RoleManage',
     data() {
       return {
 
       }
     },
     computed: {
-      ...mapState('users', ['users', 'roles']),
+      ...mapState('users', ['roles']),
     },
     methods: {
       ...mapActions('users', ['load'])
     },
     components: {
-      User,
-      NewUser,
-      Login
+      Role,
+      NewRole
     },
     mounted() {
       this.load();
@@ -37,7 +34,7 @@
 </script>
 
 <style scoped lang="scss">
-  .user {
+  .role, .newRole {
     /*max-width: 35rem;*/
   }
 </style>

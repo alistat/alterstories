@@ -41,7 +41,7 @@
 
       }
     },
-    created() {
+    mounted() {
       this.loadProjectList();
     }
   }

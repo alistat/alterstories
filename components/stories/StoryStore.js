@@ -2,11 +2,15 @@
 import Vue from 'vue';
 import DummyResponses from './DummyResponses';
 import enviroment from '~/config/environment';
-import VuexRester from '../../vuex-rester';
-import { ONLY_RESPONSE, arrayToMapById } from '../../vuex-rester';
+import VuexRester from '~/vuex-rester';
+import { requestConfigExtractor } from '~/store/index'
+import { ONLY_RESPONSE, arrayToMapById } from '~/vuex-rester';
 
 const rester = VuexRester({
-  dummy :enviroment.dummyBackend, baseUrl: enviroment.backendURL+'stories', dummyResponses: DummyResponses
+  dummy :enviroment.dummyBackend,
+  baseUrl: enviroment.backendURL+'stories',
+  dummyResponses: DummyResponses,
+  configExtractor: requestConfigExtractor
 });
 
 export function anyCommonArrayKey(arr, obj) {
@@ -175,16 +179,18 @@ export default {
     setProject(state, project) {
       project = preprocessProject(project);
       Vue.set(state.projects, project._id, project);
-      Vue.set(
-        state.filters,
-        project._id,
-        {
-          labels: [],
-          variations: [],
-          text: "",
-          showOnlyFilteredAnswers: false
-        }
-      );
+      if (!state.filters[project._id]) {
+        Vue.set(
+          state.filters,
+          project._id,
+          {
+            labels: [],
+            variations: [],
+            text: "",
+            showOnlyFilteredAnswers: false
+          }
+        );
+      }
     },
     addProject(state, project) {
       project = Object.assign({questions: [], variations: [], labels: []}, project);
@@ -335,8 +341,12 @@ export default {
         'setProjectList')
     },
     loadProject(ctx, pid) {
+      const freshLoad = !ctx.state.projects[pid];
+      if (freshLoad) {
+        setInterval(() => { rester.apiGet(ctx, `/project/${pid}`, 'setProject'); }, 5000)
+      }
       return rester.apiGet(ctx, `/project/${pid}`,
-        'setProject')
+        'setProject');
     },
     addProject(ctx, project) {
       return rester.apiPost(ctx, '/project', project,

@@ -1,14 +1,20 @@
 <template lang="pug">
   .projectWrap
-    UserManage
+    vue-tabs(v-model="openTab")
+      v-tab(title="Users")
+        UserManage
+      v-tab(title="Roles")
+        RoleManage
 </template>
 
 <script>
   import UserManage from "~/components/users/UserManage.vue";
+  import RoleManage from "~/components/users/RoleManage.vue";
+  import {VueTabs, VTab} from 'vue-nav-tabs'
 
   export default {
     head: {
-      title: 'project',
+      title: 'Users',
       link: [{
         hid: "canonical",
         rel: "canonical",
@@ -23,11 +29,14 @@
     },
     data() {
       return {
-
+        openTab: ""
       }
     },
     components: {
-      UserManage
+      UserManage,
+      RoleManage,
+      VueTabs,
+      VTab
     },
     beforeCreate() {
       this.$store.commit('setPageHead', 'users');

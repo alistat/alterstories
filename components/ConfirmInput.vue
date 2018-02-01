@@ -7,7 +7,7 @@
       input(v-model="val", @input="onInput", type="email", v-else-if="type=='email'", :placeholder="placeholder")
       input(v-model="val", @input="onInput", type="password", v-else-if="type=='password'", :placeholder="placeholder")
       input(v-model="val", @input="onInput", type="text", v-else="type=='text'", :placeholder="placeholder")
-      .changed(v-if="value != lastSavedValue && value != val") Current value is {{value}}
+      .changed(v-if="changed") Current value is: {{value}}
     .controls(:class="{hidden: value == val}")
       img.save(src="https://png.icons8.com/color/50/000000/checked-2.png", @click="onSave", title="Save")
       img.cancel(src="https://png.icons8.com/color/50/000000/close-window.png", @click="onCancel", title="Cancel")
@@ -24,7 +24,9 @@
       }
     },
     computed: {
-
+      changed() {
+        return this.value !== this.lastSavedValue && this.value !== this.val;
+      }
     },
     methods: {
       onSave() {
@@ -33,9 +35,18 @@
       },
       onCancel() {
         this.val = this.value;
+        this.lastSavedValue = this.val;
       },
       onInput() {
 
+      }
+    },
+    watch: {
+      value(newVal) {
+        if (this.val === this.lastSavedValue) {
+          this.val = newVal;
+          this.lastSavedValue = this.val;
+        }
       }
     }
   }

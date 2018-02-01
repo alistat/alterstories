@@ -17,7 +17,7 @@
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    name: 'User',
+    name: 'NewUser',
     props: [],
     data() {
       return {
@@ -48,10 +48,10 @@
     margin: 0;
   }
   label {
-    min-width: 7.5rem;
+    min-width: 6rem;
     margin-right: 0.5rem;
     vertical-align: middle;
     display: inline-block;
-    text-align: right;
+    /*text-align: right;*/
   }
 </style>
