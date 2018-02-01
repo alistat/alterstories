@@ -159,9 +159,9 @@ export default {
       if (token && user) {
         try {
           user = JSON.parse(user);
-          ctx.commit('login', {token, user});
+          ctx.commit('setMe', {token, user});
           // refresh me
-          rester.apiGet(ctx, '/user/' + user._id, 'setMe', freshUser => persistMe({user: freshUser, token}));
+          rester.apiGet(ctx, '/me', 'setMe', freshUser => persistMe({user: freshUser, token}));
         } catch (err) {
           console.error('Invalid saved user '+user);
         }
