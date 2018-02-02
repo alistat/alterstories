@@ -3,7 +3,7 @@
     SearchFilter(:pid="pid")
     .questionsWrap
       h3 Questions
-      Question(v-for="q in getFilteredQuestions", :key='q._id', :question="q", :pid="pid")
+      Question.question(v-for="(q, _, i) in getFilteredQuestions", :key='q._id', :question="q", :pid="pid", :index="i+1")
     NewQuestion(:pid="pid")
     LabelManage(:pid="pid")
     VariationManage(:pid="pid")
@@ -43,5 +43,7 @@
 </script>
 
 <style scoped lang="scss">
-
+  .question {
+    margin-bottom: 2rem;
+  }
 </style>

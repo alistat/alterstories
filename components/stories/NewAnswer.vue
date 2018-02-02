@@ -63,8 +63,8 @@
     font-weight: 700;
     color: #123f2f;
     cursor: pointer;
-    /*margin-left: 1.2rem;*/
     font-style: italic;
+    margin-left: 0.4rem;
   }
   .expandButton:hover {
     text-decoration: underline;

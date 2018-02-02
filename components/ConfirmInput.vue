@@ -77,7 +77,7 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
-    font-size: 1.15rem;
+    font-size: inherit;
     /*border-width: 0 0 1px 0;*/
     border-width: 0;
     /*border-color: darkslategray;*/

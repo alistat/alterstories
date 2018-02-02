@@ -214,7 +214,7 @@
   }
   .content {
     flex: auto;
-    padding-bottom: 0.2rem;
+    padding-bottom: 0.3rem;
     padding-top: 0.2rem;
   }
   .textWrap {
@@ -224,6 +224,7 @@
   }
   .text {
     flex: auto;
+    font-size: 1.1rem;
   }
   .link {
     margin-left: 0.2rem;
@@ -258,7 +259,8 @@
   .noLabels {
     font-style: italic;
     font-size: 0.8rem;
-    color: darkslategray;
+    /*color: darkslategray;*/
+    color: #628989;
     display: inline-block;
     vertical-align: middle;
   }
