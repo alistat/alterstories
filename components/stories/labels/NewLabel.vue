@@ -38,7 +38,6 @@
     font-weight: 300;
     font-size: 1rem;
   }
-
   .name {
     font-size: 1.15rem;
     border-width: 0 0 1px;
