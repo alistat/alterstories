@@ -17,6 +17,7 @@ module.exports = {
     ]
   },
   css: [
+    '~assets/styles.scss',
     'node_modules/vue-multiselect/dist/vue-multiselect.min.css',
     'node_modules/vue-nav-tabs/themes/vue-tabs.css',
   ],

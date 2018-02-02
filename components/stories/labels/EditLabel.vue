@@ -1,81 +1,60 @@
 <template lang="pug">
   .labelWrap
     img.delete(@click="onDelete", src="https://png.icons8.com/color/50/000000/trash.png", title="Delete")
-    span.nameWrap
-      input.name(v-model="name", @keyup.enter="onSave", @input="changedName=true", placeholder="Label name...")
     span.colorWrap
-      input.color(v-model="color", type="color", @input="changedColor=true")
-    span.actionsWrap(v-show="changedName || changedColor")
-      img.save(src="https://png.icons8.com/color/50/000000/checked-2.png", @click="onSave", title="Save")
-      img.cancel(src="https://png.icons8.com/color/50/000000/close-window.png", @click="onCancel", title="Cancel")
+      ConfirmInput.input(:value="label.color", placeholder="Label color...", type="color",
+          @input="onColorEdit")
+    span.nameWrap
+      ConfirmInput.input(:value="label.name", placeholder="Label name...",
+          @input="onNameEdit", :inputStyles="{'border-width': '0 0 1px 0'}")
 </template>
 
 <script>
   import { mapGetters, mapState, mapActions } from 'vuex';
+  import ConfirmInput from '../../ConfirmInput';
 
   export default {
     name: "EditLabel",
     props: ['pid', 'label'],
     data() {
       return {
-        name: this.label.name,
-        color: this.label.color,
-        changedName: false,
-        changedColor: false
       }
     },
     methods: {
       ...mapActions('stories', ['editLabel', 'removeLabel']),
-      onSave() {
-        this.editLabel({pid: this.pid, label: {_id: this.label._id, name: this.name, color: this.color}});
-        this.changedName = false;
-        this.changedColor = false;
-      },
-      onCancel() {
-        this.name = this.label.name;
-        this.color = this.label.color;
-        this.changedName = false;
-        this.changedColor = false;
-      },
       onDelete() {
         this.removeLabel({pid: this.pid, lid: this.label._id});
+      },
+      onNameEdit(newName) {
+        this.editLabel({pid: this.pid, label: {_id: this.label._id, name: newName}});
+      },
+      onColorEdit(newColor) {
+        this.editLabel({pid: this.pid, label: {_id: this.label._id, color: newColor}});
       }
     },
     watch: {
-      label: {
-        deep: true,
-        handler(label) {
-          this.name = label.name;
-          this.color = label.color;
-        }
-      }
+    },
+    components: {
+      ConfirmInput
     }
   }
 </script>
 
 <style scoped lang="scss">
   .nameWrap {
+    display: inline-block;
     vertical-align: middle;
-    margin-right: 0.5rem;
   }
-  input.name {
+  .input {
     vertical-align: middle;
   }
   .colorWrap {
+    display: inline-block;
     vertical-align: middle;
-    margin-right: 1rem;
-  }
-  input.color {
-    vertical-align: middle;
-  }
-  .actionsWrap {
-    vertical-align: middle;
-  }
-  .save, .cancel {
-    width: 2.2rem;
-    vertical-align: middle;
+    margin-right: 0.5rem;
   }
   .delete {
+    display: inline-block;
     width: 2rem;
     vertical-align: middle;
     margin-right: 0.5rem;
