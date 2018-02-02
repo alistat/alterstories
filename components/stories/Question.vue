@@ -4,10 +4,10 @@
       ConfirmInput.text(:value="question.text", @input="onEditText")
       <!--input.text(v-model="question.text")-->
     .control
-      button(@click="onRemove") Remove
+      <!--button(@click="onRemove") Remove-->
     .answersWrap
       Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer._id',
-        :answer="answer", :question="question", :pid="pid", :index="i")
+        :answer="answer", :question="question", :pid="pid", :index="answerNumbering(i)")
       NewAnswer(:question="question", :pid="pid")
 </template>
 
@@ -16,6 +16,8 @@
   import Answer from './Answer';
   import NewAnswer from './NewAnswer';
   import ConfirmInput from '../ConfirmInput';
+
+  const A_CODE = "A".charCodeAt(0);
 
   export default {
     name: 'Question',
@@ -43,6 +45,9 @@
           pid: this.pid,
           qid: this.question._id,
         })
+      },
+      answerNumbering(index) {
+        return index < 26 ? String.fromCharCode(A_CODE+index) : index+1;
       }
     },
     components: {
@@ -65,8 +70,10 @@
   }
   .answersWrap {
     margin: 0.7rem 0.5rem;
+    padding-left: 1rem;
+    max-width: 32rem;
   }
   .answer {
-    margin-bottom: 1rem;
+    border-bottom: 1px solid #d3d3d3;
   }
 </style>

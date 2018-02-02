@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@funjs/route-parser": "^1.4.0",
+    "autosize": "^4.0.0",
     "axios": "^0.17.1",
     "moment": "^2.20.1",
     "node-sass": "^4.7.2",

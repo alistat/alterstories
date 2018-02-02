@@ -1,15 +1,15 @@
 <template lang="pug">
   .answerWrap(v-if="passesFilter")
     .control
-      .index {{index+1}}
+      .index {{index}}
       .options
         img.toggleOptions(src="https://png.icons8.com/ios/50/000000/support.png",
           @click="$refs.options.open()", title="Show Options")
     .content
-      span.textWrap
-        ConfirmInput.text(:value="answer.text", @input="onEditText")
-        <!--input.text(v-model="answer.text")-->
-        a.link(v-if="answer.link", :href="answer.link", title="Open link in new tab", target="_blank") {{linkDomain}}
+      .textWrap
+        ConfirmInput.text(:value="answer.text", @input="onEditText", type="textarea")
+        .linkWrap
+          a.link(v-if="answer.link", :href="answer.link", title="Open link in new tab", target="_blank") {{linkDomain}}
       .metaWrap
         span.variationWrap
           Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
@@ -23,7 +23,7 @@
       .optionsInner
         section
           h4.optionsHead(style="margin-top: 0;") Link
-          ConfirmInput.linkEdit(:value="answer.link", type="url", @input="onEditLink")
+          ConfirmInput.linkEdit(:value="answer.link", type="url", @input="onEditLink", placeholder="Add a link...")
           <!--input.linkEdit(v-model="answer.link", type="url")-->
         section
           h4.optionsHead Variations
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions, mapState } from 'vuex'
+  import { mapGetters, mapActions, mapState } from 'vuex';
   import {anyCommonArrayKey, mapToId, getLabels, getVariations} from './StoryStore';
   import { mapGettersParam } from './Util';
   import SLabel from './labels/SLabel';
@@ -53,7 +53,7 @@
   import ConfirmInput from '../ConfirmInput';
   import moment from 'moment';
   import Multiselect from 'vue-multiselect';
-  import { SweetModal } from 'sweet-modal-vue'
+  import { SweetModal } from 'sweet-modal-vue';
 
   function getHostName(url) {
     let match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:#?]+)/i);
@@ -202,24 +202,31 @@
   }
   .control {
     margin-right: 0.45rem;
-    padding: 0 0.4rem 0 0;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
     border-right: 1px solid #d3d3d3;
   }
   .index {
     font-size: 1.4rem;
     font-weight: 700;
     color: #483d8b;
-    text-align: right;
+    text-align: center;
+    min-width: 1em;
   }
   .content {
     flex: auto;
+    padding-bottom: 0.2rem;
+    padding-top: 0.2rem;
   }
   .textWrap {
-    display: inline-block;
+    /*display: inline-block;*/
     /*height: 2.5rem;*/
+    display: flex;
+  }
+  .text {
+    flex: auto;
   }
   .link {
-    margin-left: 0.5rem;
+    margin-left: 0.2rem;
     color: #1d1d1d;
     text-decoration: underline;
     font-style: italic;
@@ -254,6 +261,9 @@
     color: darkslategray;
     display: inline-block;
     vertical-align: middle;
+  }
+  .options {
+    text-align: center;
   }
   .toggleOptions {
     display: inline-block;
