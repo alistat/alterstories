@@ -3,21 +3,22 @@
     .pageHeader
       nav
         .leftNav
-          span.navElem
+          span.navElem.topLevel.enabled
             nuxt-link(to="/", title="Projects") Projects
-          span.navElem
+          span.navElem.topLevel.enabled
             nuxt-link(to="/users", title="Users") Users
         .centerNav
           h1.titleHead {{$store.state.pageHead}}
         .rightNav
-          span.navElem(v-if="!me")
+          span.navElem.topLevel(v-if="!me")
             snap.loginButton(@click="$refs.login.open()") Login
-          span.navElem.loggedIn(v-else)
+          span.navElem.topLevel.loggedIn(v-else)
             span.user {{me.username}}
-            span.profile.navElem()
-              span Profile
-            span.logout.navElem()
-              span.logoutButton(@click="logout()") Logout
+            .popUp
+              .profile.navElem.enabled()
+                span Profile
+              .logout.navElem.enabled()
+                span.logoutButton(@click="logout()") Logout
     .main
       #content
         nuxt
@@ -88,7 +89,7 @@
     display: flex;
   }
   .leftNav, .rightNav {
-    width: 10rem;
+    width: 12rem;
   }
   .centerNav {
     flex: auto;
@@ -98,9 +99,21 @@
   }
   .navElem {
     padding: 0.2rem 0.6rem;
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+
+  }
+  .topLevel {
+    margin-top: 1rem;
   }
   .navElem a {
     color: white;
+    text-decoration: none;
+  }
+  .navElem.enabled > *:hover {
+    text-decoration: underline;
   }
   .loggedIn {
     position: relative;
@@ -108,18 +121,36 @@
   .loginButton {
     cursor: pointer;
   }
-  .profile, .logout {
+  .popUp {
     display: none;
+    /*background: rgba(74, 74, 74, 0.62);*/
+    background: rgba(54, 121, 143, 0.96);
     position: absolute;
+    right: 0;
+    padding: 0.3rem 0 0.3rem;
+    text-align: center;
+  }
+  .popUp .navElem {
+    /*padding: 0.6rem 0.6rem 0.2rem;*/
+    padding: .4rem .6rem .4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.8);;
+  }
+  .user {
+    cursor: default;
+    padding: 0 0.6rem;
+  }
+  .profile, .logout {
+    /*display: none;*/
+    /*position: absolute;*/
     cursor: pointer;
   }
-  .profile {
-    top: 100%
-  }
-  .logout {
-    top: 200%
-  }
-  .loggedIn:hover .profile, .loggedIn:hover .logout {
+  /*.profile {*/
+    /*top: 100%*/
+  /*}*/
+  /*.logout {*/
+    /*top: 200%*/
+  /*}*/
+  .loggedIn:hover .popUp {
     display: block;
   }
 </style>
