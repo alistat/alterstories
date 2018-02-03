@@ -30,7 +30,7 @@
       Stories
     },
     beforeCreate() {
-      this.$store.commit('setPageHead', 'project');
+      this.$store.commit('setPageHead', 'Projects');
     }
   }
 </script>

@@ -18,7 +18,7 @@
       input(v-model="val", @keyup.ctrl.enter="onCtrlEnter", type="text", v-else,
           :placeholder="placeholder", :readonly="readonly", :style="inputStyles")
       .changed(v-if="changed && type!='color'") Changed: {{value}}
-      .changed(v-if="changed && type=='color'", :title="value", :style="{color:value}", :class="colorChanged") Changed
+      .changed.colorChanged(v-if="changed && type=='color'", :title="value", :style="{color:value}") Changed
     .controls(:class="{hidden: nonSavable || type=='color'}")
       img.save(src="https://png.icons8.com/color/50/000000/checked-2.png", @click="onSave", title="Save")
       img.cancel(src="https://png.icons8.com/color/50/000000/close-window.png", @click="onCancel", title="Cancel")

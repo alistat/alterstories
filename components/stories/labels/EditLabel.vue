@@ -44,6 +44,7 @@
   .nameWrap {
     display: inline-block;
     vertical-align: middle;
+    font-size: 1.0rem;
   }
   .input {
     vertical-align: middle;

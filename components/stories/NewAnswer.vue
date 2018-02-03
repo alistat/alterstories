@@ -3,7 +3,7 @@
     .innerWrap
       .control
         .index(v-if="expand", @click="expand=false", title="Click to collapse") *
-        .index(v-else) *
+        .index(v-else, @click="expand=true", title="Click to expand") *
       .content
         .collapsed(v-show="!expand")
           span.expandButton(@click="expand=true", title="Click to add answer") Add Answer
@@ -82,11 +82,11 @@
     font-weight: 700;
     color: #2a926d;
     text-align: center;
-    cursor: default;
+    /*cursor: default;*/
     min-width: 1em;
+    cursor: pointer;
   }
   .expand .index {
-    cursor: pointer;
   }
   .content {
     flex: auto;

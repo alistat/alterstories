@@ -148,7 +148,7 @@ export default {
         const filter = state.filters[pid];
         const project = state.projects[pid];
         if (filter.labels.length === 0) {
-          return project.questions;
+          return Object.values(project.questions);
         }
         const labels = mapToId(filter.labels);
         const result = [];
@@ -157,8 +157,6 @@ export default {
             result.push(q)
           } else {
             for (const a of Object.values(q.answers)) {
-              console.log(a.text);
-              console.log(a.labels);
               if (anyCommonArrayKey(labels, a.labels)) {
                 result.push(q);
                 break;
@@ -356,9 +354,9 @@ export default {
       return rester.apiPatch(ctx, '/project/'+project._id, {name: project.name},
         'editProject', project)
     },
-    deleteProject(ctx, pid) {
+    deleteProject(ctx, {pid}) {
       return rester.apiDelete(ctx, '/project/'+pid,
-        'deleteProject', pid)
+        'deleteProject', {pid})
     },
     addQuestion(ctx, {pid, question}) {
       return rester.apiPost(ctx, '/question/'+pid, question,
@@ -414,7 +412,7 @@ export default {
     },
     removeLabelFromQuestion(ctx, {pid, qid, lid}) {
       return rester.apiDelete(ctx, `/questionLabel/${qid}/${lid}`,
-        'addLabelToQuestion', {pid, qid, lid})
+        'removeLabelFromQuestion', {pid, qid, lid})
     },
     addLabelToAnswer(ctx, {pid, qid, aid, lid}) {
       return rester.apiPut(ctx, `/answerLabel/${aid}/${lid}`, null,

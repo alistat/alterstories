@@ -39,7 +39,7 @@
       VTab
     },
     beforeCreate() {
-      this.$store.commit('setPageHead', 'users');
+      this.$store.commit('setPageHead', 'Users');
     }
   }
 </script>

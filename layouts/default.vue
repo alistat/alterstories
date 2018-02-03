@@ -1,6 +1,6 @@
 <template lang="pug">
   div.wrap
-    .bar
+    .pageHeader
       nav
         .leftNav
           span.navElem
@@ -8,6 +8,7 @@
           span.navElem
             nuxt-link(to="/users", title="Users") Users
         .centerNav
+          h1.titleHead {{$store.state.pageHead}}
         .rightNav
           span.navElem(v-if="!me")
             snap.loginButton(@click="$refs.login.open()") Login
@@ -18,7 +19,8 @@
             span.logout.navElem()
               span.logoutButton(@click="logout()") Logout
     .main
-      nuxt
+      #content
+        nuxt
     .comps
       SweetModal.loginDialog(ref="login", overlay-theme="dark")
         h2(slot="title") Login
@@ -58,14 +60,47 @@
 </script>
 
 <style scoped lang="scss">
+  .pageHeader {
+    background: #36798f;
+    padding: 0 1rem 0.9rem;
+    color: white;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-family: serif;
+  }
+  h1 {
+    margin-top: 0;
+    padding-top: 0.8rem;
+    margin-bottom: 0;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+  #content {
+    width: 60rem;
+    max-width: 98%;
+    margin: auto;
+    background: white;
+    min-height: 50rem;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+  }
   nav {
     display: flex;
+  }
+  .leftNav, .rightNav {
+    width: 10rem;
   }
   .centerNav {
     flex: auto;
   }
+  .rightNav {
+    text-align: right;
+  }
   .navElem {
     padding: 0.2rem 0.6rem;
+  }
+  .navElem a {
+    color: white;
   }
   .loggedIn {
     position: relative;

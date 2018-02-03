@@ -1,10 +1,10 @@
 <template lang="pug">
   .storiesWrap
     vue-tabs(v-model="openTab")
+      v-tab(title="Open Project")
+        OpenProject(@selected="onSelected", @added="onAdded")
       v-tab(v-for="project in getOpenProjects", :key="project._id", :title="project.name")
         Project(:pid="project._id")
-      v-tab(title="+ Open Project")
-        OpenProject(@selected="onSelected", @added="onAdded")
 
 </template>
 
@@ -28,7 +28,7 @@
     },
     methods: {
       onAdded(name) {
-        Vue.nextTick(() => this.openTab = name);
+//        Vue.nextTick(() => this.openTab = name);
       },
       onSelected(pid) {
         Vue.nextTick(() => this.openTab = this.projects[pid].name);

@@ -37,6 +37,7 @@
     color: #587d6e;
     font-weight: 300;
     font-size: 1rem;
+    text-align: center;
   }
   .name {
     font-size: 1.15rem;

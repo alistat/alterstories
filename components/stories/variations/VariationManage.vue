@@ -1,6 +1,6 @@
 <template lang="pug">
   .variationManageWrap
-    h4 Variations
+    h4.header Variations
     .variationsWrap
       EditVariation.variation(v-for="variation in getVariations", :key="variation._id", :variation="variation", :pid="pid")
     NewVariation(:pid="pid")
@@ -37,5 +37,12 @@
 </script>
 
 <style scoped lang="scss">
-
+  .header {
+    margin: 0 0 1rem;
+    color: dimgray;
+    font-size: 1rem;
+    text-align: center;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
 </style>

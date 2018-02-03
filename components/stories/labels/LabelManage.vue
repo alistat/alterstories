@@ -1,6 +1,6 @@
 <template lang="pug">
   .labelManageWrap
-    h4 Labels
+    h4.header Labels
     .labelsWrap
       EditLabel.label(v-for="label in getLabels", :key="label._id", :label="label", :pid="pid")
     NewLabel(:pid="pid")
@@ -37,5 +37,12 @@
 </script>
 
 <style scoped lang="scss">
-
+  .header {
+    margin: 0 0 1rem;
+    color: dimgray;
+    font-size: 1rem;
+    /*text-align: center;*/
+    font-weight: normal;
+    text-transform: uppercase;
+  }
 </style>

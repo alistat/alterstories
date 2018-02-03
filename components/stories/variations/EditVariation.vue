@@ -26,10 +26,10 @@
         this.removeVariation({pid: this.pid, vid: this.variation._id});
       },
       onNameEdit(newName) {
-        this.editVariation({pid: this.pid, label: {_id: this.variation._id, name: newName}});
+        this.editVariation({pid: this.pid, variation: {_id: this.variation._id, name: newName}});
       },
       onColorEdit(newColor) {
-        this.editVariation({pid: this.pid, label: {_id: this.variation._id, color: newColor}});
+        this.editVariation({pid: this.pid, variation: {_id: this.variation._id, color: newColor}});
       }
     },
     watch: {
@@ -44,6 +44,7 @@
   .nameWrap {
     display: inline-block;
     vertical-align: middle;
+    font-size: 1.0rem;
   }
   .input {
     vertical-align: middle;

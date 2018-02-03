@@ -18,7 +18,7 @@
           SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
           span.noLabels(v-if="labelCount == 0") no labels
-    sweet-modal.optionsArea(ref="options")
+    sweet-modal.optionsArea(ref="options", overlay-theme="dark")
       h2(slot="title") Answer "{{textCut}}"
       .optionsInner
         section
@@ -39,8 +39,8 @@
           multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="_id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
             placeholder="Add Label", @input="onNewLabel", :disabled="newLabels.length == 0")
-      button.actionButton.deleteButton(slot="button", color="red", @click="onDelete") Remove Answer
-      button.actionButton.closeButton(slot="button", color="red", @click="$refs.options.close()") Close
+      button.actionButton.deleteButton(slot="button", @click="onDelete") Remove Answer
+      button.actionButton.closeButton(slot="button", @click="$refs.options.close()") Close
 
 </template>
 
@@ -104,10 +104,10 @@
       },
       textCut() {
         let text = this.answer.text;
-        if (text.length < 15) {
+        if (text.length < 20) {
           return text;
         }
-        return text.substr(0, 14)+"..."
+        return text.substr(0, 19)+"..."
       },
       labelCount() {
         return Object.keys(this.answer.labels).length;
@@ -208,7 +208,8 @@
   .index {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #483d8b;
+    /*color: #483d8b;*/
+    color: #737089;
     text-align: center;
     min-width: 1em;
   }
