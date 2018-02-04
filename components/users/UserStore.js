@@ -3,6 +3,7 @@ import enviroment from '~/config/environment';
 import VuexRester from '~/vuex-rester';
 import { requestConfigExtractor } from '~/store/index'
 import { ONLY_RESPONSE, arrayToMapById } from '~/vuex-rester';
+import { canI, expandCapabilities } from './permissions';
 
 const rester = VuexRester({
   dummy :enviroment.dummyBackend,
@@ -16,6 +17,7 @@ const CAPABILITIES = [
   "manage-labels",
   "manage-variations",
   "manage-questions",
+  "manage-question-labels",
   "manage-answers",
   "manage-answer-labels",
   "manage-answer-variations",
@@ -82,10 +84,25 @@ export default {
   getters: {
     capabilities() {
       return CAPABILITIES;
+    },
+    canI(state) {
+      return (action) => {
+        return canI(state.me, action)
+      }
     }
   },
   mutations: {
     setMe(state, me) {
+      if (!me.user) return;
+      if (!me.user.capabilities) {
+        me.user.capabilities = {};
+      } else {
+        const caps = {};
+        for (const cap of me.user.capabilities) {
+          caps[cap] = true;
+        }
+        me.user.capabilities = expandCapabilities(caps);
+      }
       state.me = me.user;
       state.token = me.token;
     },

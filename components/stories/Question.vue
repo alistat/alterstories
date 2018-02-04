@@ -9,15 +9,15 @@
       .content
         .index.mobile {{index}})
         .textWrap
-          ConfirmInput.text(:value="question.text", @input="onEditText", type="textarea")
+          ConfirmInput.text(:value="question.text", @input="onEditText", type="textarea", :readonly="!canI('manage-questions')")
         .meta
           SLabel(v-for="(addedAt, lid) in question.labels", :key="lid", :lid="lid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
+            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)", :readOnly="!canI('manage-question-labels')")
         .answersWrap
           Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer._id',
             :answer="answer", :question="question", :pid="pid", :index="answerNumbering(i)")
-          NewAnswer(:question="question", :pid="pid")
-        .actions
+          NewAnswer(:question="question", :pid="pid", v-if="canI('manage-answers')")
+        .actions(v-if="canI('manage-question-labels')")
           button.propertiesButton(@click="$refs.options.open()", title="Show Options") Options
         sweet-modal.optionsArea(ref="options", overlay-theme="dark")
           h2(slot="title") Question "{{textCut}}"
@@ -59,6 +59,7 @@
       ...mapGettersParam('stories', {
         labelsMap: 'pid', getLabels: 'pid',
       }),
+      ...mapGetters('users', ['canI']),
       newLabels() {
         return this.getLabels.filter(label => !this.question.labels.hasOwnProperty(label._id));
       },

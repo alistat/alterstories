@@ -6,14 +6,14 @@
         ul.projects
           li.project(v-for="project in projectList", :key="project._id", :class="{open: projectIsOpen(project._id)}",
           @click="onSelect(project._id)") {{project.name}}
-      section.newProject
+      section.newProject(v-if="canI('manage-projects')")
         h3.header New Project
         input.name(v-model="newProjectName", placeholder="New project name", @keyup.enter="onNew")
-        button.add(type="button", @click="onSave") Create
+        button.add(type="button", @click="onNew") Create
 </template>
 
 <script>
-  import { mapMutations, mapState, mapActions } from 'vuex';
+  import { mapGetters, mapState, mapActions } from 'vuex';
 
   export default {
     name: "OpenProject",
@@ -23,7 +23,8 @@
       }
     },
     computed: {
-      ...mapState('stories', ['projectList', 'projects'])
+      ...mapState('stories', ['projectList', 'projects']),
+      ...mapGetters('users', ['canI'])
     },
     methods: {
       ...mapActions('stories', ['loadProjectList', 'loadProject', 'addProject']),

@@ -1,15 +1,15 @@
 <template lang="pug">
   .projectWrap(:class="{readOnly: readOnly}")
-    h3.midHead  Options
+    h3.midHead(v-if="canI('manage-projects') || canI('manage-labels') || canI('manage-variations')")  Options
     .options
-      button.manageLabels(@click="$refs.labelsVariations.open('Labels')") Manage Labels
-      button.manageVariations(@click="$refs.labelsVariations.open('Variations')") Manage Variations
-      button.showProperties(@click="$refs.properties.open()") Properties
+      button.manageLabels(@click="$refs.labelsVariations.open('Labels')", v-if="canI('manage-labels')") Manage Labels
+      button.manageVariations(@click="$refs.labelsVariations.open('Variations')", v-if="canI('manage-variations')") Manage Variations
+      button.showProperties(@click="$refs.properties.open()", v-if="canI('manage-projects')") Properties
     .questionsWrap
       h3.midHead  Questions
       SearchFilter(:pid="pid")
       Question.question(v-for="(q, i) in getFilteredQuestions", :key='q._id', :question="q", :pid="pid", :index="i+1")
-    NewQuestion(:pid="pid")
+    NewQuestion(:pid="pid", v-if="canI('manage-questions')")
     sweet-modal.labelsVariations(ref="labelsVariations", title="Labels & Variations")
       sweet-modal-tab(title="Labels", id="Labels")
         .tabInner
@@ -47,7 +47,8 @@
     },
     computed: {
       ...mapState('stories', ['readOnly']),
-      ...mapGettersParam('stories', {getFilteredQuestions: 'pid', getProject: 'pid', getFilter: 'pid' })
+      ...mapGettersParam('stories', {getFilteredQuestions: 'pid', getProject: 'pid', getFilter: 'pid' }),
+      ...mapGetters('users', ['canI'])
     },
     methods: {
       ...mapActions('stories', ['editProject', 'deleteProject']),

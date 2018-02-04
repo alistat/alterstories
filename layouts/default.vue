@@ -5,13 +5,13 @@
         .leftNav
           span.navElem.topLevel.enabled
             nuxt-link(to="/", title="Projects") Projects
-          span.navElem.topLevel.enabled
+          span.navElem.topLevel.enabled(v-if="canI('view-users-roles')")
             nuxt-link(to="/users", title="Users") Users
         .centerNav
           h1.titleHead {{$store.state.pageHead}}
         .rightNav
           span.navElem.topLevel(v-if="!me")
-            snap.loginButton(@click="$refs.login.open()") Login
+            span.loginButton(@click="$refs.login.open()") Login
           span.navElem.topLevel.loggedIn(v-else)
             span.user {{me.username}}
             .popUp
@@ -33,7 +33,7 @@
   import Login from '~/components/users/Login.vue';
   import { SweetModal } from 'sweet-modal-vue';
   import NuxtLink from "../.nuxt/components/nuxt-link";
-  import { mapState, mapActions } from 'vuex';
+  import { mapState, mapActions, mapGetters } from 'vuex';
 
   export default {
     name: "DefaultLayout",
@@ -43,10 +43,11 @@
       }
     },
     computed: {
-      ...mapState('users', ['me'])
+      ...mapState('users', ['me']),
+      ...mapGetters('users', ['canI'])
     },
     methods: {
-      ...mapActions('users', ['loadMe', 'logout'])
+      ...mapActions('users', ['loadMe', 'logout']),
     },
     mounted() {
       this.loadMe();

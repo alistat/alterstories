@@ -2,37 +2,36 @@
   .answerWrap(v-if="passesFilter")
     .control
       .index {{index}}
-      .options
+      .options(v-if="canI('manage-answers') || canI('manage-answer-labels') || canI('manage-answer-variations')")
         img.toggleOptions(src="https://png.icons8.com/ios/50/000000/support.png",
           @click="$refs.options.open()", title="Show Options")
     .content
       .textWrap
-        ConfirmInput.text(:value="answer.text", @input="onEditText", type="textarea")
+        ConfirmInput.text(:value="answer.text", @input="onEditText", type="textarea", :readonly="!canI('manage-answers')")
         .linkWrap
           a.link(v-if="answer.link", :href="answer.link", title="Open link in new tab", target="_blank") {{linkDomain}}
       .metaWrap
         span.variationWrap
           Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)")
+            :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)", :readOnly="!canI('manage-answer-variations')")
         span.labelWrap
           SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
+            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)", :readOnly="!canI('manage-answer-labels')")
           span.noLabels(v-if="labelCount == 0") no labels
     sweet-modal.optionsArea(ref="options", overlay-theme="dark")
       h2(slot="title") Answer "{{textCut}}"
       .optionsInner
-        section
+        section(v-if="canI('manage-answers')")
           h4.optionsHead(style="margin-top: 0;") Link
           ConfirmInput.linkEdit(:value="answer.link", type="url", @input="onEditLink", placeholder="Add a link...")
-          <!--input.linkEdit(v-model="answer.link", type="url")-->
-        section
+        section(v-if="canI('manage-answer-variations')")
           h4.optionsHead Variations
           Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)")
           multiselect.addNew(v-model="newVariation", :options="newVariations", label="name", track-by="_id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='',
             placeholder="Add to Variation", @input="onNewVariation", :disabled="newVariations.length == 0")
-        section
+        section(v-if="canI('manage-answer-labels')")
           h4.optionsHead Labels
           SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
             :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
@@ -78,6 +77,7 @@
       ...mapGettersParam('stories', {
         labelsMap: 'pid', getLabels: 'pid', getVariations: 'pid', getFilter: 'pid'
       }),
+      ...mapGetters('users', ['canI']),
       newLabels() {
         return this.getLabels.filter(label => !this.answer.labels.hasOwnProperty(label._id));
       },
