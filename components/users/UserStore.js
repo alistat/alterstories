@@ -56,14 +56,16 @@ const CAPABILITIES = [
           true
  */
 
-function persistMe({user, token}) {
+function persistMe({user, token, tokenExpiration}) {
   localStorage.setItem('users/token', token);
+  localStorage.setItem('users/tokenExpiration', tokenExpiration);
   localStorage.setItem('users/user', JSON.stringify(user));
-  return {user, token};
+  return {user, token, tokenExpiration};
 }
 
 function unpersistMe() {
   localStorage.removeItem('users/token');
+  localStorage.removeItem('users/tokenExpiration');
   localStorage.removeItem('users/user');
   return {user, token};
 }
@@ -73,6 +75,7 @@ export default {
   state: {
     me: null,
     token: '',
+    tokenExpiration: null,
     users: {
 
     },
@@ -93,18 +96,20 @@ export default {
   },
   mutations: {
     setMe(state, me) {
-      if (!me.user) return;
-      if (!me.user.capabilities) {
-        me.user.capabilities = {};
-      } else {
-        const caps = {};
-        for (const cap of me.user.capabilities) {
-          caps[cap] = true;
+      if (me.user) {
+        if (!me.user.capabilities) {
+          me.user.capabilities = {};
+        } else {
+          const caps = {};
+          for (const cap of me.user.capabilities) {
+            caps[cap] = true;
+          }
+          me.user.capabilities = expandCapabilities(caps);
         }
-        me.user.capabilities = expandCapabilities(caps);
       }
       state.me = me.user;
       state.token = me.token;
+      state.tokenExpiration = me.tokenExpiration;
     },
     logout(state) {
 
@@ -172,13 +177,14 @@ export default {
   actions: {
     loadMe(ctx) {
       const token = localStorage.getItem('users/token');
+      const tokenExpiration = localStorage.getItem('users/tokenExpiration');
       let user = localStorage.getItem('users/user');
-      if (token && user) {
+      if (token && user && tokenExpiration && Date.now() < tokenExpiration) {
         try {
           user = JSON.parse(user);
-          ctx.commit('setMe', {token, user});
+          ctx.commit('setMe', {token, user, tokenExpiration});
           // refresh me
-          rester.apiGet(ctx, '/me', 'setMe', freshUser => persistMe({user: freshUser, token}));
+          rester.apiGet(ctx, '/me', 'setMe', freshUser => persistMe({user: freshUser, token, tokenExpiration}));
         } catch (err) {
           console.error('Invalid saved user '+user);
         }
@@ -194,7 +200,7 @@ export default {
       rester.apiPost(ctx, '/login', creds, 'setMe', null, (_, me) => persistMe(me))
     },
     logout(ctx) {
-      ctx.commit('setMe', {token: '', user: null});
+      ctx.commit('setMe', {token: '', user: null, tokenExpiration: null});
       unpersistMe();
     },
     editUser(ctx, user) {
