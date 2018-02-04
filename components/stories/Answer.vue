@@ -1,5 +1,5 @@
 <template lang="pug">
-  .answerWrap(v-if="passesFilter")
+  .answerWrap(v-show="passesFilter")
     .control
       .index {{index}}
       .options(v-if="canI('manage-answers') || canI('manage-answer-labels') || canI('manage-answer-variations')")
@@ -74,6 +74,7 @@
       }
     },
     computed: {
+      ...mapState('stories', ['newAnswers']),
       ...mapGettersParam('stories', {
         labelsMap: 'pid', getLabels: 'pid', getVariations: 'pid', getFilter: 'pid'
       }),
@@ -89,6 +90,7 @@
         return this.getVariations.filter(variation => !usedVariations.hasOwnProperty(variation._id));
       },
       passesFilter() {
+        if (this.newAnswers[this.answer._id]) return true;
         const vari =  this.getFilter.variations.length === 0
           || anyCommonArrayKey(mapToId(this.getFilter.variations), this.answer.variations);
         const label = this.getFilter.labels.length === 0

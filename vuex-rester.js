@@ -61,7 +61,6 @@ function routeRequest(verb, dummies, ctx, apiPath, configExtractor, mutParam, ap
 
 export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefaults={}, configExtractor=null}) {
   axiosDefaults.baseUrl = baseUrl;
-  console.log(axiosDefaults);
   const ax = axios.create(axiosDefaults);
   if (dummy) {
     dummyResponses = parseDummyResponses(dummyResponses);

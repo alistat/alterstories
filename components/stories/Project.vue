@@ -8,7 +8,7 @@
     .questionsWrap
       h3.midHead  Questions
       SearchFilter(:pid="pid")
-      Question.question(v-for="(q, i) in getFilteredQuestions", :key='q._id', :question="q", :pid="pid", :index="i+1")
+      Question.question(v-for="(q, i) in getSortedQuestions", :key='q._id', :question="q", :pid="pid", :index="i+1")
     NewQuestion(:pid="pid", v-if="canI('manage-questions')")
     sweet-modal.labelsVariations(ref="labelsVariations", title="Labels & Variations")
       sweet-modal-tab(title="Labels", id="Labels")
@@ -47,7 +47,7 @@
     },
     computed: {
       ...mapState('stories', ['readOnly']),
-      ...mapGettersParam('stories', {getFilteredQuestions: 'pid', getProject: 'pid', getFilter: 'pid' }),
+      ...mapGettersParam('stories', {getSortedQuestions: 'pid', getProject: 'pid', getFilter: 'pid' }),
       ...mapGetters('users', ['canI'])
     },
     methods: {

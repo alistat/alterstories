@@ -1,5 +1,5 @@
 <template lang="pug">
-  .questionWrap
+  .questionWrap(v-show="passesFilter")
     .head
       .control
         .index {{index}}
@@ -37,6 +37,7 @@
 <script>
   import { mapGetters, mapState, mapActions } from 'vuex'
   import { mapGettersParam } from './Util';
+  import {anyCommonArrayKey, mapToId, getLabels, getVariations} from './StoryStore';
   import Answer from './Answer';
   import NewAnswer from './NewAnswer';
   import SLabel from './labels/SLabel';
@@ -57,9 +58,25 @@
     },
     computed: {
       ...mapGettersParam('stories', {
-        labelsMap: 'pid', getLabels: 'pid',
+        labelsMap: 'pid', getLabels: 'pid', getFilter: 'pid'
       }),
       ...mapGetters('users', ['canI']),
+      passesFilter() {
+        if (this.getFilter.labels.length === 0) {
+          return true;
+        }
+        const labels = mapToId(this.getFilter.labels);
+        if (anyCommonArrayKey(labels, this.question.labels)) {
+          return true;
+        }
+        for (const a of Object.values(this.question.answers)) {
+          if (anyCommonArrayKey(labels, a.labels)) {
+            return true;
+          }
+        }
+
+        return false;
+      },
       newLabels() {
         return this.getLabels.filter(label => !this.question.labels.hasOwnProperty(label._id));
       },

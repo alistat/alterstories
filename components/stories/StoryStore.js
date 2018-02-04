@@ -99,7 +99,8 @@ export default {
     projectList: [],
     projects: {},
     filters: {},
-    readOnly: false
+    readOnly: false,
+    newAnswers: {}, // marks newly added answers
   },
   getters: {
     getOpenProjects(state) {
@@ -143,29 +144,10 @@ export default {
           || !!filter.text;
       }
     },
-    getFilteredQuestions(state) {
+    getSortedQuestions(state) {
       return pid => {
-        const filter = state.filters[pid];
         const project = state.projects[pid];
-        if (filter.labels.length === 0) {
-          return Object.values(project.questions);
-        }
-        const labels = mapToId(filter.labels);
-        const result = [];
-        for (const q of Object.values(project.questions)) {
-          if (anyCommonArrayKey(labels, q.labels)) {
-            result.push(q)
-          } else {
-            for (const a of Object.values(q.answers)) {
-              if (anyCommonArrayKey(labels, a.labels)) {
-                result.push(q);
-                break;
-              }
-            }
-          }
-        }
-
-        return result;
+        return Object.values(project.questions).sort((a, b) => a._id > b._id ? 1 : -1);
       };
 
     }
@@ -289,6 +271,7 @@ export default {
       answer = Object.assign({text: '', labels: [], variations: []}, answer);
       preprocessAnswer(answer);
       Vue.set(question.answers, answer._id, answer);
+      Vue.set(state.newAnswers, answer._id, true);
     },
     editAnswer(state, {pid, qid, answer: newAnswer}) {
       const answer = state.projects[pid].questions[qid].answers[newAnswer._id];
@@ -324,13 +307,16 @@ export default {
 
     // Front Only
     addLabelToFilter(state, {pid, lid}) {
-      state.filters[pid].labels.push(lid)
+      state.filters[pid].labels.push(lid);
+      Vue.set(state, 'newAnswers', {});
     },
     setSelectedLabels(state, {pid, selectedLabels}) {
-      Vue.set(state.filters[pid], 'labels', selectedLabels)
+      Vue.set(state.filters[pid], 'labels', selectedLabels);
+      Vue.set(state, 'newAnswers', {});
     },
     setSelectedVariations(state, {pid, selectedVariations}) {
-      Vue.set(state.filters[pid], 'variations', selectedVariations)
+      Vue.set(state.filters[pid], 'variations', selectedVariations);
+      Vue.set(state, 'newAnswers', {});
     }
   },
   actions: {
