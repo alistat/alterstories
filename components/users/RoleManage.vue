@@ -1,5 +1,6 @@
 <template lang="pug">
   .wrap
+    h3.header(v-if="Object.keys(roles).length > 0")  Roles
     .rolesWrap
       Role.role(v-for="role in roles", :role="role", :key="role._id")
     NewRole.newRole
@@ -34,7 +35,13 @@
 </script>
 
 <style scoped lang="scss">
-  .role, .newRole {
-    /*max-width: 35rem;*/
+  .wrap {
+    padding: 1rem 1.5rem;
+  }
+  .header {
+    margin: 2rem 0 0.8rem;
+    color: #587d6e;
+    font-weight: 300;
+    font-size: 1.5rem;
   }
 </style>

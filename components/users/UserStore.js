@@ -76,6 +76,7 @@ export default {
     me: null,
     token: '',
     tokenExpiration: null,
+    loginError: '',
     users: {
 
     },
@@ -111,9 +112,12 @@ export default {
       state.token = me.token;
       state.tokenExpiration = me.tokenExpiration;
     },
-    logout(state) {
-
+    setLoginError(state, loginError) {
+      state.loginError = loginError;
     },
+    // logout(state) {
+    //
+    // },
     setUsers(state, users) {
       state.users = arrayToMapById(users);
       state.loaded = true;
@@ -198,6 +202,14 @@ export default {
     },
     login(ctx, creds) {
       rester.apiPost(ctx, '/login', creds, 'setMe', null, (_, me) => persistMe(me))
+        .then(() => ctx.commit('setLoginError', ''))
+        .catch(error => {
+          if (error.response && error.response.data.msg) {
+            ctx.commit('setLoginError', error.response.data.msg)
+          } else {
+            ctx.commit('setLoginError', 'Could not login "'+error.message+'". Hope this helps...')
+          }
+        })
     },
     logout(ctx) {
       ctx.commit('setMe', {token: '', user: null, tokenExpiration: null});

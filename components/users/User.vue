@@ -1,16 +1,16 @@
 <template lang="pug">
-  .userWrap
+  .userWrap(:class="{expand: expand}")
     .content
       .sideControl
-        img.expand(v-show='!expand', @click="expand=true", title='Expand', src="https://png.icons8.com/color/50/000000/expand-arrow.png")
-        img.collapse(v-show='expand', @click="expand=false", title='Collapse', src="https://png.icons8.com/color/50/000000/collapse-arrow.png")
+        img.expandButton(v-show='!expand', @click="expand=true", title='Expand', src="https://png.icons8.com/color/50/000000/expand-arrow.png")
+        img.collapseButton(v-show='expand', @click="expand=false", title='Collapse', src="https://png.icons8.com/color/50/000000/collapse-arrow.png")
       .main
         fieldset
           label.username(v-show='expand') Username
-          ConfirmInput.edit.username(:value="user.username", @input="onUsernameEdit")
+          ConfirmInput.edit.username(:value="user.username", @input="onUsernameEdit", placeholder="lala24")
         fieldset(v-show='expand')
           label Email
-          ConfirmInput.edit.email(:value="user.email", type="email", @input="onEmailEdit")
+          ConfirmInput.edit.email(:value="user.email", type="email", @input="onEmailEdit", placeholder="email@example.com")
         fieldset(v-show='expand')
           label Password
           ConfirmInput.edit.password(v-model="pass", type="password", placeholder="Change password...", @input="onPasswordEdit")
@@ -19,7 +19,8 @@
           multiselect.roles(:value="user.roles", :options="roles", :multiple="true", label="name",
           track-by="_id", placeholder="Select roles",  @select="onAddRole", @remove="onRemoveRole")
         .controls(v-show='expand')
-          button(@click="onRemove") Remove User
+          label
+          button.removeButton(@click="onRemove") Remove User
 </template>
 
 <script>
@@ -83,8 +84,8 @@
 </script>
 
 <style scoped lang="scss">
-  .userWrap {
-    /*margin-bottom: 1.5rem;*/
+  .userWrap.expand {
+    margin-bottom: 0.6rem;
   }
   .content {
     display: flex;
@@ -106,24 +107,27 @@
     margin-right: 0.5rem;
     vertical-align: middle;
     display: inline-block;
-    /*text-align: right;*/
   }
   .edit {
     vertical-align: middle;
   }
-  .expand, .collapse {
+  .expandButton, .collapseButton {
     margin: .7rem 0 .5rem .5rem;
     cursor: pointer;
   }
-  .expand {
+  .expandButton {
     width: 1.1rem;
   }
-  .collapse {
+  .collapseButton {
     width: 1.3rem;
     margin: .5rem 0 .5rem .5rem;
   }
   .controls {
-    /*text-align: center;*/
+    margin: 0.2rem 0 0 0.5rem;
+  }
+  .removeButton {
+    font-size: 0.8rem;
+    padding: .3rem 0.7rem;
   }
   .roles {
     max-width: 25rem;

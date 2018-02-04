@@ -1,15 +1,15 @@
 <template lang="pug">
   .newUserWrap
-    h3 New User
+    h3.header New User
     fieldset
       label Username
-      input(v-model='username')
+      input(v-model='username', placeholder="lala24")
     fieldset
       label Email
-      input(v-model='email', type="email")
+      input(v-model='email', type="email", placeholder="email@example.com")
     fieldset
       label Password
-      input(v-model='password', type="password")
+      input(v-model='password', type="password", placeholder="veR1$€kR€t")
     button(@click="onAdd") Add
 </template>
 
@@ -43,6 +43,12 @@
 </script>
 
 <style scoped lang="scss">
+  .header {
+    margin: 2rem 0 0.8rem;
+    color: #587d6e;
+    font-weight: 300;
+    font-size: 1.5rem;
+  }
   fieldset {
     border: none;
     margin: 0;

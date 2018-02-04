@@ -24,7 +24,7 @@
         { hid: 'description', name: 'description', content: 'System for collaborative script development' },
         { hid: 'og:description', name: 'og:description', content: 'System for collaborative script development' },
         { hid: 'og:title', name: 'og:title', content: 'alterstories' },
-        { hid: 'og:url', name: 'og:url', content: 'https://alistat.eu' },
+        { hid: 'og:url', name: 'og:url', content: 'https://github.com/different-ways' },
       ]
     },
     data() {

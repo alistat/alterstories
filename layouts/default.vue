@@ -13,8 +13,8 @@
           span.navElem.topLevel(v-if="!me")
             span.loginButton(@click="$refs.login.open()") Login
           span.navElem.topLevel.loggedIn(v-else)
-            span.user {{me.username}}
-            .popUp
+            span.user(@click="userMenuShow=!userMenuShow") {{me.username}}
+            .popUp(:class="{userMenuShow: userMenuShow}")
               .profile.navElem.enabled()
                 span Profile
               .logout.navElem.enabled()
@@ -39,7 +39,7 @@
     name: "DefaultLayout",
     data() {
       return {
-
+        userMenuShow: false
       }
     },
     computed: {
@@ -56,6 +56,13 @@
       NuxtLink,
       Login,
       SweetModal
+    },
+    watch: {
+      me(user) {
+        if (user) {
+          this.$refs.login.close()
+        }
+      }
     }
   }
 
@@ -123,13 +130,16 @@
     cursor: pointer;
   }
   .popUp {
-    display: none;
+    visibility: hidden;
+    /*display: none;*/
     /*background: rgba(74, 74, 74, 0.62);*/
     background: rgba(54, 121, 143, 0.96);
     position: absolute;
     right: 0;
     padding: 0.3rem 0 0.3rem;
     text-align: center;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.4s;
   }
   .popUp .navElem {
     /*padding: 0.6rem 0.6rem 0.2rem;*/
@@ -151,7 +161,10 @@
   /*.logout {*/
     /*top: 200%*/
   /*}*/
-  .loggedIn:hover .popUp {
-    display: block;
+  .loggedIn:hover .popUp, .userMenuShow.popUp {
+    visibility: visible;
+    opacity: 1;
+    /*transition: opacity 0.4s;*/
+    transition: visibility 0.3s, opacity 0.4s;
   }
 </style>

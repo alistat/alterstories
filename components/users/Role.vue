@@ -1,19 +1,20 @@
 <template lang="pug">
-  .roleWrap
+  .roleWrap(:class="{expand: expand}")
     .content
       .sideControl
-        img.expand(v-show='!expand', @click="expand=true", title='Expand', src="https://png.icons8.com/color/50/000000/expand-arrow.png")
-        img.collapse(v-show='expand', @click="expand=false", title='Collapse', src="https://png.icons8.com/color/50/000000/collapse-arrow.png")
+        img.expandButton(v-show='!expand', @click="expand=true", title='Expand', src="https://png.icons8.com/color/50/000000/expand-arrow.png")
+        img.collapseButton(v-show='expand', @click="expand=false", title='Collapse', src="https://png.icons8.com/color/50/000000/collapse-arrow.png")
       .main
         fieldset
           label.name(v-show='expand') Name
-          ConfirmInput.edit.name(:value="role.name", @input="onNameEdit")
+          ConfirmInput.edit.name(:value="role.name", @input="onNameEdit", placeholder="Role name...")
         fieldset(v-show='expand')
           label.caplabel Capabilities
           multiselect.caps(:value="role.capabilities", :options="allCapabilities", :multiple="true",
             placeholder="Select capabilities",  @input="onSetCapabilities")
         .controls(v-show='expand')
-          button(@click="onRemove") Remove Role
+          label
+          button.removeButton(@click="onRemove") Remove Role
 </template>
 
 <script>
@@ -59,8 +60,8 @@
 </script>
 
 <style scoped lang="scss">
-  .userWrap {
-    /*margin-bottom: 1.5rem;*/
+  .roleWrap.expand {
+    margin-bottom: 0.6rem;
   }
   .content {
     display: flex;
@@ -82,24 +83,23 @@
     margin-right: 0.5rem;
     vertical-align: middle;
     display: inline-block;
-    /*text-align: right;*/
   }
   .edit {
     vertical-align: middle;
   }
-  .expand, .collapse {
+  .expandButton, .collapseButton {
     margin: .7rem 0 .5rem .5rem;
     cursor: pointer;
   }
-  .expand {
+  .expandButton {
     width: 1.1rem;
   }
-  .collapse {
+  .collapseButton {
     width: 1.3rem;
     margin: .5rem 0 .5rem .5rem;
   }
   .controls {
-    /*text-align: center;*/
+    margin: 0.2rem 0 0 0.5rem;
   }
   .caps {
     max-width: 25rem;
@@ -108,5 +108,8 @@
   .caplabel {
     vertical-align: top;
   }
-
+  .removeButton {
+    font-size: 0.8rem;
+    padding: .3rem 0.7rem;
+  }
 </style>
