@@ -13,7 +13,7 @@
       link: [{
         hid: "canonical",
         rel: "canonical",
-        href: "https://alistat.eu"
+        href: "/start"
       }],
       meta: [
         { hid: 'description', name: 'description', content: 'System for collaborative script development' },
