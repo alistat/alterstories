@@ -70,15 +70,15 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
     apiGet(ctx, apiPath, mutation, respMap=IDENTITY) {
       if (dummy) {
         const resp = routeRequest('GET', dummyResponses, ctx, apiPath, configExtractor);
-        ctx.commit(mutation, respMap(resp));
-        return Promise.resolve();
+        if (mutation) ctx.commit(mutation, respMap(resp));
+        return Promise.resolve(resp);
       }
       const conf = configExtractor ? configExtractor(ctx) : {};
       return new Promise((resolve, reject) => {
         ax.get(baseUrl+apiPath, conf)
           .then(resp => {
-            ctx.commit(mutation, respMap(resp.data));
-            resolve();
+            if (mutation) ctx.commit(mutation, respMap(resp.data));
+            resolve(resp.data);
           }, reject)
       })
     },
@@ -86,15 +86,15 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
     apiPost(ctx, apiPath, apiParam, mutation, mutParam, respCombine=ONLY_MUT_PARAM) {
       if (dummy) {
         const resp = routeRequest('POST', dummyResponses, ctx, apiPath, configExtractor, mutParam, apiParam);
-        ctx.commit(mutation, respCombine(mutParam, resp));
-        return Promise.resolve();
+        if (mutation) ctx.commit(mutation, respCombine(mutParam, resp));
+        return Promise.resolve(resp);
       }
       const conf = configExtractor ? configExtractor(ctx) : {};
       return new Promise((resolve, reject) => {
         ax.post(baseUrl+apiPath, apiParam, conf)
           .then(resp => {
-            ctx.commit(mutation, respCombine(mutParam, resp.data));
-            resolve();
+            if (mutation) ctx.commit(mutation, respCombine(mutParam, resp.data));
+            resolve(resp.data);
           }, reject)
       })
     },
@@ -102,15 +102,15 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
     apiPatch(ctx, apiPath, apiParam, mutation, mutParam, respCombine=ONLY_MUT_PARAM) {
       if (dummy) {
         const resp = routeRequest('PATCH', dummyResponses, ctx, apiPath, configExtractor, mutParam, apiParam);
-        ctx.commit(mutation, respCombine(mutParam, resp));
-        return Promise.resolve();
+        if (mutation) ctx.commit(mutation, respCombine(mutParam, resp));
+        return Promise.resolve(resp);
       }
       const conf = configExtractor ? configExtractor(ctx) : {};
       return new Promise((resolve, reject) => {
         ax.patch(baseUrl+apiPath, apiParam, conf)
           .then(resp => {
-            ctx.commit(mutation, respCombine(mutParam, resp.data));
-            resolve();
+            if (mutation) ctx.commit(mutation, respCombine(mutParam, resp.data));
+            resolve(resp.data);
           }, reject)
       })
     },
@@ -118,15 +118,15 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
     apiPut(ctx, apiPath, apiParam, mutation, mutParam, respCombine=ONLY_MUT_PARAM) {
       if (dummy) {
         const resp = routeRequest('PUT', dummyResponses, ctx, apiPath, configExtractor, mutParam, apiParam);
-        ctx.commit(mutation, respCombine(mutParam, resp));
-        return Promise.resolve();
+        if (mutation) ctx.commit(mutation, respCombine(mutParam, resp));
+        return Promise.resolve(resp);
       }
       const conf = configExtractor ? configExtractor(ctx) : {};
       return new Promise((resolve, reject) => {
         ax.put(baseUrl+apiPath, apiParam, conf)
           .then(resp => {
-            ctx.commit(mutation, respCombine(mutParam, resp.data));
-            resolve();
+            if (mutation) ctx.commit(mutation, respCombine(mutParam, resp.data));
+            resolve(resp.data);
           }, reject)
       })
     },
@@ -134,15 +134,15 @@ export default function ({dummy=false, baseUrl='', dummyResponses={}, axiosDefau
     apiDelete(ctx, apiPath, mutation, mutParam) {
       if (dummy) {
         const resp = routeRequest('PUT', dummyResponses, ctx, apiPath, configExtractor, mutParam);
-        ctx.commit(mutation, mutParam);
-        return Promise.resolve();
+        if (mutation) ctx.commit(mutation, mutParam);
+        return Promise.resolve(resp);
       }
       const conf = configExtractor ? configExtractor(ctx) : {};
       return new Promise((resolve, reject) => {
         ax.delete(baseUrl+apiPath, conf)
           .then(() => {
-            ctx.commit(mutation, mutParam);
-            resolve();
+            if (mutation) ctx.commit(mutation, mutParam);
+            resolve(resp.data);
           }, reject)
       })
     }

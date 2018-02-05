@@ -1,6 +1,7 @@
 import Vuex from 'vuex';
 import StoriesStore from '../components/stories/StoryStore';
 import UserStore from '../components/users/UserStore';
+import BootstrapStore from '../components/bootstrap/BootstrapStore';
 import enviroment from '../config/environment';
 
 export function requestConfigExtractor({rootState}) {
@@ -29,6 +30,7 @@ const createStore = () => {
     modules: {
       stories: StoriesStore,
       users: UserStore,
+      bootstrap: BootstrapStore
     }
   })
 };

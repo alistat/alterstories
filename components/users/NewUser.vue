@@ -58,6 +58,5 @@
     margin-right: 0.5rem;
     vertical-align: middle;
     display: inline-block;
-    /*text-align: right;*/
   }
 </style>

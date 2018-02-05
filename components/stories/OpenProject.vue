@@ -87,7 +87,6 @@
     color: #587d6e;
     font-weight: 300;
     font-size: 1.5rem;
-    /*text-align: center;*/
   }
   .name {
     /*width: 100%;*/

@@ -201,15 +201,21 @@ export default {
       }
     },
     login(ctx, creds) {
-      rester.apiPost(ctx, '/login', creds, 'setMe', null, (_, me) => persistMe(me))
-        .then(() => ctx.commit('setLoginError', ''))
-        .catch(error => {
-          if (error.response && error.response.data.msg) {
-            ctx.commit('setLoginError', error.response.data.msg)
-          } else {
-            ctx.commit('setLoginError', 'Could not login "'+error.message+'". Hope this helps...')
-          }
-        })
+      return new Promise((resolve, reject) => {
+        rester.apiPost(ctx, '/login', creds, 'setMe', null, (_, me) => persistMe(me))
+          .then((me) => {
+            ctx.commit('setLoginError', '');
+            resolve(me)
+          })
+          .catch(error => {
+            if (error.response && error.response.data.msg) {
+              ctx.commit('setLoginError', error.response.data.msg)
+            } else {
+              ctx.commit('setLoginError', 'Could not login "'+error.message+'". Hope this helps...')
+            }
+            reject(error)
+          })
+      })
     },
     logout(ctx) {
       ctx.commit('setMe', {token: '', user: null, tokenExpiration: null});
