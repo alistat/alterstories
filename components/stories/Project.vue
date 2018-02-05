@@ -59,7 +59,8 @@
         })
       },
       onDelete() {
-        this.deleteProject({pid: this.pid})
+        this.$emit('deleted', this.pid);
+        this.deleteProject({pid: this.pid});
       }
     },
     components: {

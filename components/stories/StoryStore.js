@@ -99,7 +99,7 @@ export default {
     projectList: [],
     projects: {},
     filters: {},
-    readOnly: false,
+    // readOnly: false,
     newAnswers: {}, // marks newly added answers
   },
   getters: {

@@ -1,9 +1,9 @@
 <template lang="pug">
-  .projectWrap
+  .pageWrap(v-if="canI('view-users-roles')")
     vue-tabs(v-model="openTab")
-      v-tab(title="Users")
+      v-tab(title="Users", v-if="canI('view-users')")
         UserManage
-      v-tab(title="Roles")
+      v-tab(title="Roles", v-if="canI('view-roles')")
         RoleManage
 </template>
 
@@ -11,6 +11,7 @@
   import UserManage from "~/components/users/UserManage.vue";
   import RoleManage from "~/components/users/RoleManage.vue";
   import {VueTabs, VTab} from 'vue-nav-tabs'
+  import { mapGetters } from 'vuex';
 
   export default {
     head: {
@@ -31,6 +32,9 @@
       return {
         openTab: ""
       }
+    },
+    computed: {
+      ...mapGetters('users', ['canI'])
     },
     components: {
       UserManage,

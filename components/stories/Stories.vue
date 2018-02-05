@@ -4,7 +4,7 @@
       v-tab(title="Open Project")
         OpenProject(@selected="onSelected", @added="onAdded")
       v-tab(v-for="project in getOpenProjects", :key="project._id", :title="project.name")
-        Project(:pid="project._id")
+        Project(:pid="project._id", @deleted="onDelete(project._id)")
 
 </template>
 
@@ -32,6 +32,9 @@
       },
       onSelected(pid) {
         Vue.nextTick(() => this.openTab = this.projects[pid].name);
+      },
+      onDelete(pid) {
+        this.openTab = "Open Project";
       }
     },
     components: {
