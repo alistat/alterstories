@@ -1,5 +1,5 @@
 <template lang="pug">
-  .answerWrap(v-show="passesFilter")
+  .answerWrap(v-show="alwaysShow || passesFilter")
     .control
       .index {{index}}
       .options(v-if="canI('manage-answers') || canI('manage-answer-labels') || canI('manage-answer-variations')")
@@ -66,7 +66,7 @@
 
   export default {
     name: 'Answer',
-    props: ['answer', 'question', 'index', 'pid'],
+    props: ['answer', 'question', 'index', 'pid', 'alwaysShow'],
     data() {
       return {
         newLabel: null,

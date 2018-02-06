@@ -15,7 +15,7 @@
             :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)", :readOnly="!canI('manage-question-labels')")
         .answersWrap
           Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer._id',
-            :answer="answer", :question="question", :pid="pid", :index="answerNumbering(i)")
+            :answer="answer", :question="question", :pid="pid", :index="answerNumbering(i)", :alwaysShow="questionPassesFilter")
           NewAnswer(:question="question", :pid="pid", v-if="canI('manage-answers')")
         .actions(v-if="canI('manage-question-labels')")
           button.propertiesButton(@click="$refs.options.open()", title="Show Options") Options
@@ -61,14 +61,16 @@
         labelsMap: 'pid', getLabels: 'pid', getFilter: 'pid'
       }),
       ...mapGetters('users', ['canI']),
-      passesFilter() {
+      questionPassesFilter() {
         if (this.getFilter.labels.length === 0) {
           return true;
         }
         const labels = mapToId(this.getFilter.labels);
-        if (anyCommonArrayKey(labels, this.question.labels)) {
-          return true;
-        }
+        return !!anyCommonArrayKey(labels, this.question.labels);
+
+      },
+      anAnswerPassesFilter() {
+        const labels = mapToId(this.getFilter.labels);
         for (const a of Object.values(this.question.answers)) {
           if (anyCommonArrayKey(labels, a.labels)) {
             return true;
@@ -76,6 +78,9 @@
         }
 
         return false;
+      },
+      passesFilter() {
+        return this.questionPassesFilter || this.questionPassesFilter;
       },
       newLabels() {
         return this.getLabels.filter(label => !this.question.labels.hasOwnProperty(label._id));
