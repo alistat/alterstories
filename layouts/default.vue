@@ -92,6 +92,7 @@
     min-height: 50rem;
     padding: 1rem 0;
     margin-bottom: 2rem;
+    border: 1px solid #e9e9e9;
   }
   nav {
     display: flex;
