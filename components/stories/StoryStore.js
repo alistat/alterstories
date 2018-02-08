@@ -26,17 +26,29 @@ export function mapToId(arr) {
   return arr.map(el => el._id);
 }
 
-function preprocessAnswer(a) {
-  a.labels = arrayToMapById(a.labels, 'lid');
-  a.variations = arrayToMapById(a.variations, 'vid');
+function preprocessAnswer(a, labels, variations) {
+  if (labels) {
+    a.labels = arrayToMapById(a.labels.filter(l => !!labels[l.lid]), 'lid');
+  } else {
+    a.labels = arrayToMapById(a.labels, 'lid');
+  }
+  if (variations) {
+    a.variations = arrayToMapById(a.variations.filter(v => !!variations[v.vid]), 'vid');
+  } else {
+    a.variations = arrayToMapById(a.variations, 'vid');
+  }
   return a;
 }
 
-function preprocessQuestion(q) {
+function preprocessQuestion(q, labels, variations) {
   for (const a of q.answers) {
-    preprocessAnswer(a);
+    preprocessAnswer(a, labels, variations);
   }
-  q.labels = arrayToMapById(q.labels, 'lid');
+  if (labels) {
+    q.labels = arrayToMapById(q.labels.filter(l => !!labels[l.lid]), 'lid');
+  } else {
+    q.labels = arrayToMapById(q.labels, 'lid');
+  }
   q.answers = arrayToMapById(q.answers);
   return q;
 }
@@ -45,7 +57,7 @@ function preprocessProject(project) {
   project.variations = arrayToMapById(project.variations);
   project.labels = arrayToMapById(project.labels);
   for (const q of project.questions) {
-    preprocessQuestion(q);
+    preprocessQuestion(q, project.labels, project.variations);
   }
   project.questions = arrayToMapById(project.questions);
   return project;
@@ -393,27 +405,27 @@ export default {
         'removeAnswer', {pid, qid, aid})
     },
     addLabelToQuestion(ctx, {pid, qid, lid}) {
-      return rester.apiPut(ctx, `/questionLabel/${qid}/${lid}`, null,
+      return rester.apiPut(ctx, `/questionLabel/${pid}/${qid}/${lid}`, null,
         'addLabelToQuestion', {pid, qid, lid})
     },
     removeLabelFromQuestion(ctx, {pid, qid, lid}) {
-      return rester.apiDelete(ctx, `/questionLabel/${qid}/${lid}`,
+      return rester.apiDelete(ctx, `/questionLabel/${pid}/${qid}/${lid}`,
         'removeLabelFromQuestion', {pid, qid, lid})
     },
     addLabelToAnswer(ctx, {pid, qid, aid, lid}) {
-      return rester.apiPut(ctx, `/answerLabel/${aid}/${lid}`, null,
+      return rester.apiPut(ctx, `/answerLabel/${pid}/${qid}/${aid}/${lid}`, null,
         'addLabelToAnswer', {pid, qid, aid, lid})
     },
     removeLabelFromAnswer(ctx, {pid, qid, aid, lid}) {
-      return rester.apiDelete(ctx, `/answerLabel/${aid}/${lid}`,
+      return rester.apiDelete(ctx, `/answerLabel/${pid}/${qid}/${aid}/${lid}`,
         'removeLabelFromAnswer', {pid, qid, aid, lid})
     },
     addAnswerIntoVariation(ctx, {pid, vid, qid, aid}) {
-      return rester.apiPut(ctx, `/variationAnswer/${aid}/${vid}`, null,
+      return rester.apiPut(ctx, `/variationAnswer/${pid}/${qid}/${aid}/${vid}`, null,
         'addAnswerIntoVariation', {pid, vid, qid, aid})
     },
     removeAnswerFromVariation(ctx, {pid, vid, qid, aid}) {
-      return rester.apiDelete(ctx, `/variationAnswer/${aid}/${vid}`,
+      return rester.apiDelete(ctx, `/variationAnswer/${pid}/${qid}/${aid}/${vid}`,
         'removeAnswerFromVariation', {pid, vid, qid, aid})
     }
   }
