@@ -80,14 +80,10 @@
       }),
       ...mapGetters('users', ['canI']),
       newLabels() {
-        return this.getLabels.filter(label => !this.answer.labels.hasOwnProperty(label._id));
+        return this.getLabels.filter(label => !this.answer.labels[label._id]);
       },
       newVariations() {
-        let usedVariations = {};
-        for (const a of Object.values(this.question.answers)) {
-          Object.assign(usedVariations, a.variations);
-        }
-        return this.getVariations.filter(variation => !usedVariations.hasOwnProperty(variation._id));
+        return this.getVariations.filter(variation => !this.answer.variations[variation._id]);
       },
       passesFilter() {
         if (this.newAnswers[this.answer._id]) return true;
