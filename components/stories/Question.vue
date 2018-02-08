@@ -11,8 +11,8 @@
         .textWrap
           ConfirmInput.text(:value="question.text", @input="onEditText", type="textarea", :readonly="!canI('manage-questions')")
         .meta
-          SLabel(v-for="(addedAt, lid) in question.labels", :key="lid", :lid="lid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)", :readOnly="!canI('manage-question-labels')")
+          SLabel(v-for="(_, lid) in question.labels", :key="lid", :lid="lid", :pid="pid",
+            @remove="onLabelRemove(lid)", :readOnly="!canI('manage-question-labels')")
         .answersWrap
           Answer.answer(v-for="(answer, _, i) in question.answers", :key='answer._id',
             :answer="answer", :question="question", :pid="pid", :index="answerNumbering(i)", :alwaysShow="questionPassesFilter")
@@ -24,8 +24,8 @@
           .optionsInner
             section
               h4.optionsHead Labels
-              SLabel(v-for="(addedAt, lid) in question.labels", :key="lid", :lid="lid", :pid="pid",
-                :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
+              SLabel(v-for="(_, lid) in question.labels", :key="lid", :lid="lid", :pid="pid",
+                @remove="onLabelRemove(lid)")
               multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="_id", :multiple="false",
                 :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
                 placeholder="Add Label", @input="onNewLabel", :disabled="newLabels.length == 0")
@@ -130,9 +130,6 @@
           qid: this.question._id,
           lid
         })
-      },
-      formatDate(date) {
-        return moment(date).format('LLLL');
       },
     },
     components: {

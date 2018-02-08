@@ -12,11 +12,11 @@
           a.link(v-if="answer.link", :href="answer.link", title="Open link in new tab", target="_blank") {{linkDomain}}
       .metaWrap
         span.variationWrap
-          Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)", :readOnly="!canI('manage-answer-variations')")
+          Variation(v-for="(_, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
+            @remove="onVariationRemove(vid)", :readOnly="!canI('manage-answer-variations')")
         span.labelWrap
-          SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)", :readOnly="!canI('manage-answer-labels')")
+          SLabel(v-for="(_, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
+            @remove="onLabelRemove(lid)", :readOnly="!canI('manage-answer-labels')")
           span.noLabels(v-if="labelCount == 0") no labels
     sweet-modal.optionsArea(ref="options", overlay-theme="dark")
       h2(slot="title") Answer "{{textCut}}"
@@ -26,15 +26,15 @@
           ConfirmInput.linkEdit(:value="answer.link", type="url", @input="onEditLink", placeholder="Add a link...")
         section(v-if="canI('manage-answer-variations')")
           h4.optionsHead Variations
-          Variation(v-for="(addedAt, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onVariationRemove(vid)")
+          Variation(v-for="(_, vid) in answer.variations", :key="vid", :vid="vid", :pid="pid",
+            @remove="onVariationRemove(vid)")
           multiselect.addNew(v-model="newVariation", :options="newVariations", label="name", track-by="_id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='',
             placeholder="Add to Variation", @input="onNewVariation", :disabled="newVariations.length == 0")
         section(v-if="canI('manage-answer-labels')")
           h4.optionsHead Labels
-          SLabel(v-for="(addedAt, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
-            :title="'Added at '+formatDate(addedAt)", @remove="onLabelRemove(lid)")
+          SLabel(v-for="(_, lid) in answer.labels", :key="lid", :lid="lid", :pid="pid",
+            @remove="onLabelRemove(lid)")
           multiselect.addNew(v-model="newLabel", :options="newLabels", label="name", track-by="_id", :multiple="false",
             :allowEmpty="true", :resetAfter="true", :hideSelected="true", selectLabel='', :option-height="20",
             placeholder="Add Label", @input="onNewLabel", :disabled="newLabels.length == 0")
@@ -183,9 +183,6 @@
           vid
         })
       },
-      formatDate(date) {
-        return moment(date).format('LLLL');
-      }
     },
     components: {
       SLabel,

@@ -299,19 +299,19 @@ export default {
       Vue.delete(question.answers, aid);
     },
     addLabelToQuestion(state, {pid, qid, lid}) {
-      Vue.set(state.projects[pid].questions[qid].labels, lid, Date.now());
+      Vue.set(state.projects[pid].questions[qid].labels, lid, {lid});
     },
     removeLabelFromQuestion(state, {pid, qid, lid}) {
       Vue.delete(state.projects[pid].questions[qid].labels, lid);
     },
     addLabelToAnswer(state, {pid, qid, aid, lid}) {
-      Vue.set(state.projects[pid].questions[qid].answers[aid].labels, lid, Date.now());
+      Vue.set(state.projects[pid].questions[qid].answers[aid].labels, lid, {lid});
     },
     removeLabelFromAnswer(state, {pid, qid, aid, lid}) {
       Vue.delete(state.projects[pid].questions[qid].answers[aid].labels, lid);
     },
     addAnswerIntoVariation(state, {pid, qid, aid, vid}) {
-      Vue.set(state.projects[pid].questions[qid].answers[aid].variations, vid, Date.now());
+      Vue.set(state.projects[pid].questions[qid].answers[aid].variations, vid, {vid});
     },
     removeAnswerFromVariation(state, {pid, qid, aid, vid}) {
       Vue.delete(state.projects[pid].questions[qid].answers[aid].variations, vid);
