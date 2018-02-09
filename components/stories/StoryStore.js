@@ -337,12 +337,27 @@ export default {
         'setProjectList')
     },
     loadProject(ctx, pid) {
-      const freshLoad = !ctx.state.projects[pid];
-      if (freshLoad) {
-        setInterval(() => { rester.apiGet(ctx, `/project/${pid}`, 'setProject'); }, 5000)
-      }
-      return rester.apiGet(ctx, `/project/${pid}`,
-        'setProject');
+      return new Promise((resolve, reject) => {
+        const freshLoad = !ctx.state.projects[pid];
+        console.log('emiting');
+        socket.emit('follow-project', {pid}, (resp) => {
+          console.log('data');
+          console.log(resp);
+          if (resp.data) {
+            ctx.commit('setProject', resp.data);
+            resolve();
+          } else {
+            reject(resp.error)
+          }
+        });
+        if (freshLoad) {
+          setInterval(() => {
+            socket.emit('follow-project', {pid}, (resp) => {
+              if (resp.data) ctx.commit('setProject', resp.data)
+            });
+          }, 2000)
+        }
+      });
     },
     addProject(ctx, project) {
       return rester.apiPost(ctx, '/project', project,

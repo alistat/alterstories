@@ -27,6 +27,9 @@
         h2(slot="title") Login
         Login
     style(src="~/node_modules/vue-multiselect/dist/vue-multiselect.min.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js")
+    script.
+      window.socket = io('{{environment.backendURL}}');
 </template>
 
 <script>
@@ -44,6 +47,7 @@
     },
     computed: {
       ...mapState('users', ['me']),
+      ...mapState(['environment']),
       ...mapGetters('users', ['canI'])
     },
     methods: {
